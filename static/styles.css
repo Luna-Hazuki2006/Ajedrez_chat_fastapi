@@ -19,4 +19,31 @@ table, td {
 
 td {
     text-align: center;
+    font-size: xx-large;
+}
+
+.blanca {
+    background-color: lightblue;
+}
+
+.blancas {
+    color: white;
+}
+
+.negra {
+    background-color: lightcoral;
+}
+
+.negras {
+    color: black;
+}
+
+.blancas:hover {
+    background-color: blue;
+    cursor: pointer;
+}
+
+.negras:hover {
+    background-color: red;
+    cursor: pointer;
 }

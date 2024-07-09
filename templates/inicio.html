@@ -8,32 +8,7 @@
     <body>
         <h1>WebSocket Chat</h1>
         <h2>Your ID: <span id="ws-id"></span></h2>
-        <table>
-            {% for i in range(8) %}
-            <tr>
-                {% for j in range(8) %}
-                {% if i == 0 or i == 7 %}
-                {% if j == 0 or j == 7 %}
-                <td>♖</td>
-                {% elif j == 1 or j == 6 %}
-                <td>♞</td>
-                {% elif j == 2 or j == 5 %}
-                <td>♝</td>
-                {% elif j == 3 %}
-                <td>♛</td>
-                {% elif j == 4 %}
-                <td>♚</td>
-                {% else %}
-                <td>❤</td>
-                {% endif %}
-                {% elif i == 1 or i == 6 %}
-                <td>♟</td>
-                {% else %}
-                <td>⬜</td>
-                {% endif %}
-                {% endfor %}
-            </tr>
-            {% endfor %}
+        <table id="tablero">
         </table>
         <form action="" onsubmit="sendMessage(event)">
             <input type="text" id="messageText" autocomplete="off"/>

@@ -2,6 +2,7 @@ from fastapi import FastAPI, WebSocket, WebSocketDisconnect, Request
 from fastapi.responses import HTMLResponse
 from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
+import json
 
 app = FastAPI()
 
@@ -42,8 +43,12 @@ async def websocket_endpoint(websocket: WebSocket, client_id: int):
     try:
         while True:
             data = await websocket.receive_text()
-            await manager.send_personal_message(f"You wrote: {data}", websocket)
-            await manager.broadcast(f"Client #{client_id} says: {data}")
+            real = json.loads(data)
+            if real['tipo'] == 'mensaje': 
+                await manager.send_personal_message(f"You wrote: {data['valor']}", websocket)
+                await manager.broadcast(f"Client #{client_id} says: {data['valor']}")
+            if real['tipo'] == 'movimiento': 
+                pass
     except WebSocketDisconnect:
         manager.disconnect(websocket)
         await manager.broadcast(f"Client #{client_id} left the chat")
