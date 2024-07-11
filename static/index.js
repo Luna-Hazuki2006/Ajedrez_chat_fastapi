@@ -3,12 +3,25 @@ let tabla = document.getElementById('tablero')
 document.querySelector("#ws-id").textContent = client_id;
 var ws = new WebSocket(`ws://localhost:8000/ws/${client_id}`);
 ws.onmessage = function(event) {
-    console.log(event);
-    var messages = document.getElementById('messages')
-    var message = document.createElement('li')
-    var content = document.createTextNode(event.data)
-    message.appendChild(content)
-    messages.appendChild(message)
+    data = JSON.parse(event.data)
+    console.log(data);
+    if (data['tipo'] == 'mensaje') {
+        var messages = document.getElementById('messages')
+        var message = document.createElement('li')
+        var content = document.createTextNode(data['valor'])
+        message.appendChild(content)
+        messages.appendChild(message)   
+    } else if (data['tipo'] == 'movimiento') {
+        let borrar = document.getElementById(data['original'])
+        let nueva = document.getElementById(data['nueva'])
+        if (borrar.classList.contains('negras')) {
+            nueva.classList.add('negras')
+        } else if (borrar.classList.contains('blancas')) {
+            nueva.classList.add('blancas')
+        }
+        borrar.innerText = '|'
+        nueva.innerText = data['valor']
+    }
 };
 function sendMessage(event) {
     var input = document.getElementById("messageText")
@@ -67,7 +80,13 @@ function llenar_datos() {
 }
 
 function mover(data) {
-    
+    let pieza = data.innerText
+    let tipo = {
+        'tipo': 'movimiento', 
+        'valor': pieza, 
+        'original': data.id
+    }
+    ws.send(JSON.stringify(tipo))
 }
 
 llenar_datos()

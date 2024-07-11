@@ -45,10 +45,18 @@ async def websocket_endpoint(websocket: WebSocket, client_id: int):
             data = await websocket.receive_text()
             real = json.loads(data)
             if real['tipo'] == 'mensaje': 
-                await manager.send_personal_message(f"You wrote: {data['valor']}", websocket)
-                await manager.broadcast(f"Client #{client_id} says: {data['valor']}")
+                real['valor'] = f"You wrote: {real['valor']}"
+                await manager.send_personal_message(json.dumps(real), websocket)
+                real['valor'] = f"Client #{client_id} says: {real['valor']}"
+                await manager.broadcast(json.dumps(real))
             if real['tipo'] == 'movimiento': 
-                pass
+                nuevo = str(real['original'])
+                lista = nuevo.split('-')
+                nuevo = f'{lista[0]}-{int(lista[1]) + 2}'
+                real['nuevo'] = nuevo
+                await manager.send_personal_message(json.dumps(real), websocket)
+                await manager.broadcast(json.dumps(real))
+
     except WebSocketDisconnect:
         manager.disconnect(websocket)
         await manager.broadcast(f"Client #{client_id} left the chat")
