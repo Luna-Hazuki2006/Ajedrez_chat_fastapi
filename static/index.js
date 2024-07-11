@@ -13,7 +13,7 @@ ws.onmessage = function(event) {
         messages.appendChild(message)   
     } else if (data['tipo'] == 'movimiento') {
         let borrar = document.getElementById(data['original'])
-        let nueva = document.getElementById(data['nueva'])
+        let nueva = document.getElementById(data['nuevo'])
         if (borrar.classList.contains('negras')) {
             nueva.classList.add('negras')
         } else if (borrar.classList.contains('blancas')) {
@@ -67,6 +67,7 @@ function llenar_datos() {
                 } else if (i == 8) {
                     td.classList.add('negras')
                 }
+                td.setAttribute('onclick', 'mover(this);')
             } else {
                 td.innerText = '|'
             }
@@ -85,6 +86,11 @@ function mover(data) {
         'tipo': 'movimiento', 
         'valor': pieza, 
         'original': data.id
+    }
+    if (data.classList.contains('negras')) {
+        tipo['color'] = 'negras'
+    } else if (data.classList.contains('blancas')) {
+        tipo['color'] = 'blancas'
     }
     ws.send(JSON.stringify(tipo))
 }

@@ -1,5 +1,5 @@
 from fastapi import FastAPI, WebSocket, WebSocketDisconnect, Request
-from fastapi.responses import HTMLResponse
+# from fastapi.responses import HTMLResponse
 from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
 import json
@@ -52,7 +52,10 @@ async def websocket_endpoint(websocket: WebSocket, client_id: int):
             if real['tipo'] == 'movimiento': 
                 nuevo = str(real['original'])
                 lista = nuevo.split('-')
-                nuevo = f'{lista[0]}-{int(lista[1]) + 2}'
+                if real['color'] == 'blancas':
+                    nuevo = f'{int(lista[0]) + 2}-{lista[1]}'
+                elif real['color'] == 'negras': 
+                    nuevo = f'{int(lista[0]) - 2}-{lista[1]}'
                 real['nuevo'] = nuevo
                 await manager.send_personal_message(json.dumps(real), websocket)
                 await manager.broadcast(json.dumps(real))
