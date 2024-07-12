@@ -14,13 +14,20 @@ ws.onmessage = function(event) {
     } else if (data['tipo'] == 'movimiento') {
         let borrar = document.getElementById(data['original'])
         let nueva = document.getElementById(data['nuevo'])
-        if (borrar.classList.contains('negras')) {
-            nueva.classList.add('negras')
-        } else if (borrar.classList.contains('blancas')) {
-            nueva.classList.add('blancas')
+        if (nueva) {
+            nueva.classList.remove('negras')
+            nueva.classList.remove('blancas')
+            if (data['color'] == 'negras') {
+                nueva.classList.add('negras')
+            } else if (data['color'] == 'blancas') {
+                nueva.classList.add('blancas')
+            }
+            nueva.setAttribute('onclick', 'mover(this);')
+            borrar.innerText = '|'
+            nueva.innerText = data['valor']
+        } else {
+            borrar.classList.add(data['color'])
         }
-        borrar.innerText = '|'
-        nueva.innerText = data['valor']
     }
 };
 function sendMessage(event) {
@@ -52,7 +59,7 @@ function llenar_datos() {
                 }
             } else if (i == 1 || i == 8) {
                 if (j == 1 || j == 8) {
-                    td.innerText = '♖'
+                    td.innerText = '♜'
                 } else if (j == 2 || j == 7) {
                     td.innerText = '♞'
                 } else if (j == 3 || j == 6) {
@@ -87,10 +94,13 @@ function mover(data) {
         'valor': pieza, 
         'original': data.id
     }
+    data.removeAttribute('onclick')
     if (data.classList.contains('negras')) {
         tipo['color'] = 'negras'
+        data.classList.remove('negras')
     } else if (data.classList.contains('blancas')) {
         tipo['color'] = 'blancas'
+        data.classList.remove('blancas')
     }
     ws.send(JSON.stringify(tipo))
 }
