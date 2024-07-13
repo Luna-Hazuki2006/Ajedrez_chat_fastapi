@@ -2,6 +2,8 @@ from fastapi import FastAPI, WebSocket, WebSocketDisconnect, Request
 # from fastapi.responses import HTMLResponse
 from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
+from posibilidades import router as posibilidades
+from piezas import router as piezas
 import json
 
 app = FastAPI()
@@ -9,6 +11,9 @@ app = FastAPI()
 app.mount("/static", StaticFiles(directory="./static"), name="static")
 
 templates = Jinja2Templates(directory="./templates")
+
+app.include_router(posibilidades.router, prefix='/posibilidades')
+app.include_router(piezas.router, prefix='/piezas')
 
 class ConnectionManager:
     def __init__(self):
