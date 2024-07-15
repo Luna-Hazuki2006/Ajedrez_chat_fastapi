@@ -87,12 +87,62 @@ function llenar_datos() {
     }
 }
 
+function eliminar() {
+    let todos = document.getElementsByTagName('td')
+    for (const esto of todos) {
+        esto.classList.remove('oportunidad')
+    }
+}
+
 function mover(data) {
+    eliminar()
     let pieza = data.innerText
     let tipo = {
         'tipo': 'movimiento', 
         'valor': pieza, 
         'original': data.id
+    }
+    let esto = '' + data.id
+    let ubicacion = esto.split('-')
+    switch (tipo.valor) {
+        case '♟':
+            if (ubicacion[0] == 2) {
+                let posibilidad = document.getElementById(Number(ubicacion[0]) + 1 + '-' + ubicacion[1])
+                posibilidad.classList.add('oportunidad')
+                posibilidad = document.getElementById(Number(ubicacion[0]) + 2 + '-' + ubicacion[1])
+                posibilidad.classList.add('oportunidad')
+            } else if (ubicacion[0] == 7) {
+                let posibilidad = document.getElementById(Number(ubicacion[0]) - 1 + '-' + ubicacion[1])
+                posibilidad.classList.add('oportunidad')
+                posibilidad = document.getElementById(Number(ubicacion[0]) - 2 + '-' + ubicacion[1])
+                posibilidad.classList.add('oportunidad')
+            } else {
+                if (data.classList.contains('blancas')) {
+                    let posibilidad = document.getElementById(Number(ubicacion[0]) + 1 + '-' + ubicacion[1])
+                    posibilidad.classList.add('oportunidad')
+                } else if (data.classList.contains('negras')) {
+                    let posibilidad = document.getElementById(Number(ubicacion[0]) - 1 + '-' + ubicacion[1])
+                    posibilidad.classList.add('oportunidad')
+                }
+            }
+            break;
+        case '♜': 
+            let cuatro = []
+            if (ubicacion[0] >= 1) {
+                for (let i = 0; i < 9; i++) {
+                }
+            }
+            break
+        case '♝': 
+            break
+        case '♞': 
+            break
+        case '♛': 
+            break
+        case '♚': 
+            break
+        default:
+            break;
     }
     data.removeAttribute('onclick')
     if (data.classList.contains('negras')) {
