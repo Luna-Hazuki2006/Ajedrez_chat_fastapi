@@ -1,8 +1,9 @@
 from pydantic import BaseModel
-from typing import Union
+from typing import Union, Optional
 
 class Pieza(BaseModel):
-    id: int
+    id: Optional[int] = None
     nombre: str
-    valor: float
-    imagen: Union[str, bytes]
+    valor: Union[bool, float]
+    imagen: Union[bytes, str]
+    posibilidades: Optional[list] = None
