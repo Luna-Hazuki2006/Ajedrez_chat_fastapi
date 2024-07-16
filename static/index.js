@@ -1,5 +1,6 @@
 var client_id = Date.now()
 let tabla = document.getElementById('tablero')
+let tipo = {}
 document.querySelector("#ws-id").textContent = client_id;
 var ws = new WebSocket(`ws://localhost:8000/ws/${client_id}`);
 ws.onmessage = function(event) {
@@ -97,13 +98,14 @@ function eliminar() {
 function mover(data) {
     eliminar()
     let pieza = data.innerText
-    let tipo = {
+    tipo = {
         'tipo': 'movimiento', 
         'valor': pieza, 
         'original': data.id
     }
     let esto = '' + data.id
     let ubicacion = esto.split('-')
+
     switch (tipo.valor) {
         case '♟':
             if (ubicacion[0] == 2) {
@@ -128,14 +130,39 @@ function mover(data) {
             break;
         case '♜': 
             let cuatro = []
-            if (ubicacion[0] >= 1) {
-                for (let i = 0; i < 9; i++) {
+            for (let i = 1; i <= 8; i++) {
+                if (i != ubicacion[0]) {
+                    let nuevo = i + '-' + ubicacion[1]
+                    let este = document.getElementById(nuevo)
+                    este.classList.add('oportunidad')
+                    cuatro.push(nuevo)
+                }
+                if (i != ubicacion[1]) {
+                    let nuevo = ubicacion[0] + '-' + i
+                    let este = document.getElementById(nuevo)
+                    este.classList.add('oportunidad')
+                    cuatro.push(nuevo)
                 }
             }
             break
         case '♝': 
             break
         case '♞': 
+            let Ele = []
+            Ele.push((Number(ubicacion[0]) + 2) + '-' + (Number(ubicacion[1]) + 1))
+            Ele.push((Number(ubicacion[0]) + 2) + '-' + (Number(ubicacion[1]) - 1))
+            Ele.push((Number(ubicacion[0]) - 2) + '-' + (Number(ubicacion[1]) + 1))
+            Ele.push((Number(ubicacion[0]) - 2) + '-' + (Number(ubicacion[1]) - 1))
+            Ele.push((Number(ubicacion[0]) - 1) + '-' + (Number(ubicacion[1]) + 2))
+            Ele.push((Number(ubicacion[0]) + 1) + '-' + (Number(ubicacion[1]) + 2))
+            Ele.push((Number(ubicacion[0]) - 1) + '-' + (Number(ubicacion[1]) - 2))
+            Ele.push((Number(ubicacion[0]) + 1) + '-' + (Number(ubicacion[1]) - 2))
+            for (const nuevo of Ele) {
+                let este = document.getElementById(nuevo)
+                if (este) {
+                    este.classList.add('oportunidad')
+                }
+            }
             break
         case '♛': 
             break
@@ -144,15 +171,19 @@ function mover(data) {
         default:
             break;
     }
-    data.removeAttribute('onclick')
+    // data.removeAttribute('onclick')
     if (data.classList.contains('negras')) {
         tipo['color'] = 'negras'
-        data.classList.remove('negras')
+        // data.classList.remove('negras')
     } else if (data.classList.contains('blancas')) {
         tipo['color'] = 'blancas'
-        data.classList.remove('blancas')
+        // data.classList.remove('blancas')
     }
-    ws.send(JSON.stringify(tipo))
+    // ws.send(JSON.stringify(tipo))
+}
+
+function movimiento(data) {
+
 }
 
 llenar_datos()
