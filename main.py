@@ -55,13 +55,13 @@ async def websocket_endpoint(websocket: WebSocket, client_id: int):
                 real['valor'] = f"Client #{client_id} says: {real['valor']}"
                 await manager.broadcast(json.dumps(real))
             if real['tipo'] == 'movimiento': 
-                nuevo = str(real['original'])
-                lista = nuevo.split('-')
-                if real['color'] == 'blancas':
-                    nuevo = f'{int(lista[0]) + 2}-{lista[1]}'
-                elif real['color'] == 'negras': 
-                    nuevo = f'{int(lista[0]) - 2}-{lista[1]}'
-                real['nuevo'] = nuevo
+                # nuevo = str(real['original'])
+                # lista = nuevo.split('-')
+                # if real['color'] == 'blancas':
+                #     nuevo = f'{int(lista[0]) + 2}-{lista[1]}'
+                # elif real['color'] == 'negras': 
+                #     nuevo = f'{int(lista[0]) - 2}-{lista[1]}'
+                # real['nuevo'] = nuevo
                 await manager.send_personal_message(json.dumps(real), websocket)
                 await manager.broadcast(json.dumps(real))
 

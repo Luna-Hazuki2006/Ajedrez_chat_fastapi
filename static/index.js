@@ -91,8 +91,16 @@ function llenar_datos() {
 function eliminar() {
     let todos = document.getElementsByTagName('td')
     for (const esto of todos) {
-        esto.classList.remove('oportunidad')
+        if (esto.classList.contains('oportunidad')) {
+            esto.classList.remove('oportunidad')
+            esto.removeAttribute('onclick')
+        }
     }
+}
+
+function dar_clickeo(nuevo) {
+    nuevo.classList.add('oportunidad')
+    nuevo.setAttribute('onclick', 'movimiento(this);')
 }
 
 function mover(data) {
@@ -110,21 +118,21 @@ function mover(data) {
         case '♟':
             if (ubicacion[0] == 2) {
                 let posibilidad = document.getElementById(Number(ubicacion[0]) + 1 + '-' + ubicacion[1])
-                posibilidad.classList.add('oportunidad')
+                dar_clickeo(posibilidad)
                 posibilidad = document.getElementById(Number(ubicacion[0]) + 2 + '-' + ubicacion[1])
-                posibilidad.classList.add('oportunidad')
+                dar_clickeo(posibilidad)
             } else if (ubicacion[0] == 7) {
                 let posibilidad = document.getElementById(Number(ubicacion[0]) - 1 + '-' + ubicacion[1])
-                posibilidad.classList.add('oportunidad')
+                dar_clickeo(posibilidad)
                 posibilidad = document.getElementById(Number(ubicacion[0]) - 2 + '-' + ubicacion[1])
-                posibilidad.classList.add('oportunidad')
+                dar_clickeo(posibilidad)
             } else {
                 if (data.classList.contains('blancas')) {
                     let posibilidad = document.getElementById(Number(ubicacion[0]) + 1 + '-' + ubicacion[1])
-                    posibilidad.classList.add('oportunidad')
+                    dar_clickeo(posibilidad)
                 } else if (data.classList.contains('negras')) {
                     let posibilidad = document.getElementById(Number(ubicacion[0]) - 1 + '-' + ubicacion[1])
-                    posibilidad.classList.add('oportunidad')
+                    dar_clickeo(posibilidad)
                 }
             }
             break;
@@ -134,18 +142,54 @@ function mover(data) {
                 if (i != ubicacion[0]) {
                     let nuevo = i + '-' + ubicacion[1]
                     let este = document.getElementById(nuevo)
-                    este.classList.add('oportunidad')
+                    dar_clickeo(este)
                     cuatro.push(nuevo)
                 }
                 if (i != ubicacion[1]) {
                     let nuevo = ubicacion[0] + '-' + i
                     let este = document.getElementById(nuevo)
-                    este.classList.add('oportunidad')
+                    dar_clickeo(este)
                     cuatro.push(nuevo)
                 }
             }
             break
         case '♝': 
+            let nuevo = 0
+            do {
+                nuevo++
+                let lugar = (Number(ubicacion[0]) + nuevo) + '-' + (Number(ubicacion[1]) + nuevo)
+                let este = document.getElementById(lugar)
+                if (este) {
+                    dar_clickeo(este)
+                } else break
+            } while (true);
+            nuevo = 0
+            do {
+                nuevo++
+                let lugar = (Number(ubicacion[0]) - nuevo) + '-' + (Number(ubicacion[1]) - nuevo)
+                let este = document.getElementById(lugar)
+                if (este) {
+                    dar_clickeo(este)
+                } else break
+            } while (true);
+            nuevo = 0
+            do {
+                nuevo++
+                let lugar = (Number(ubicacion[0]) - nuevo) + '-' + (Number(ubicacion[1]) + nuevo)
+                let este = document.getElementById(lugar)
+                if (este) {
+                    dar_clickeo(este)
+                } else break
+            } while (true);
+            nuevo = 0
+            do {
+                nuevo++
+                let lugar = (Number(ubicacion[0]) + nuevo) + '-' + (Number(ubicacion[1]) - nuevo)
+                let este = document.getElementById(lugar)
+                if (este) {
+                    dar_clickeo(este)
+                } else break
+            } while (true);
             break
         case '♞': 
             let Ele = []
@@ -160,13 +204,77 @@ function mover(data) {
             for (const nuevo of Ele) {
                 let este = document.getElementById(nuevo)
                 if (este) {
-                    este.classList.add('oportunidad')
+                    dar_clickeo(este)
                 }
             }
             break
         case '♛': 
+            for (let i = 1; i <= 8; i++) {
+                if (i != ubicacion[0]) {
+                    let variable = i + '-' + ubicacion[1]
+                    let este = document.getElementById(variable)
+                    dar_clickeo(este)
+                }
+                if (i != ubicacion[1]) {
+                    let variable = ubicacion[0] + '-' + i
+                    let este = document.getElementById(variable)
+                    dar_clickeo(este)
+                }
+            }
+            diagonales = 0
+            do {
+                diagonales++
+                let lugar = (Number(ubicacion[0]) + diagonales) + '-' + (Number(ubicacion[1]) + diagonales)
+                let este = document.getElementById(lugar)
+                if (este) {
+                    dar_clickeo(este)
+                } else break
+            } while (true);
+            diagonales = 0
+            do {
+                diagonales++
+                let lugar = (Number(ubicacion[0]) - diagonales) + '-' + (Number(ubicacion[1]) - diagonales)
+                let este = document.getElementById(lugar)
+                if (este) {
+                    dar_clickeo(este)
+                } else break
+            } while (true);
+            diagonales = 0
+            do {
+                diagonales++
+                let lugar = (Number(ubicacion[0]) - diagonales) + '-' + (Number(ubicacion[1]) + diagonales)
+                let este = document.getElementById(lugar)
+                if (este) {
+                    dar_clickeo(este)
+                } else break
+            } while (true);
+            diagonales = 0
+            do {
+                diagonales++
+                let lugar = (Number(ubicacion[0]) + diagonales) + '-' + (Number(ubicacion[1]) - diagonales)
+                let este = document.getElementById(lugar)
+                if (este) {
+                    dar_clickeo(este)
+                } else break
+            } while (true);
             break
         case '♚': 
+            let este = document.getElementById((Number(ubicacion[0]) + 1) + '-' + ubicacion[1])
+            if (este) dar_clickeo(este)
+            este = document.getElementById((Number(ubicacion[0]) - 1) + '-' + ubicacion[1])
+            if (este) dar_clickeo(este)
+            este = document.getElementById((Number(ubicacion[0]) + 1) + '-' + (Number(ubicacion[1]) + 1))
+            if (este) dar_clickeo(este)
+            este = document.getElementById((Number(ubicacion[0]) + 1) + '-' + (Number(ubicacion[1]) - 1))
+            if (este) dar_clickeo(este)
+            este = document.getElementById((Number(ubicacion[0]) - 1) + '-' + (Number(ubicacion[1]) + 1))
+            if (este) dar_clickeo(este)
+            este = document.getElementById((Number(ubicacion[0]) - 1) + '-' + (Number(ubicacion[1]) - 1))
+            if (este) dar_clickeo(este)
+            este = document.getElementById(ubicacion[0] + '-' + (Number(ubicacion[1]) + 1))
+            if (este) dar_clickeo(este)
+            este = document.getElementById(ubicacion[0] + '-' + (Number(ubicacion[1]) - 1))
+            if (este) dar_clickeo(este)
             break
         default:
             break;
@@ -179,11 +287,19 @@ function mover(data) {
         tipo['color'] = 'blancas'
         // data.classList.remove('blancas')
     }
-    // ws.send(JSON.stringify(tipo))
+    ws.send(JSON.stringify(tipo))
 }
 
 function movimiento(data) {
-
+    let original = document.getElementById(tipo['original'])
+    original.classList.remove('negras', 'blancas')
+    tipo['nuevo'] = data.id
+    if (data.classList.contains('negras')) {
+        data.classList.remove('negras')
+    } else if (data.classList.contains('blancas')) {
+        data.classList.remove('blancas')
+    }
+    ws.send(JSON.stringify(tipo))
 }
 
 llenar_datos()
