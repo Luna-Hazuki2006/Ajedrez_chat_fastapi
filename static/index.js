@@ -77,7 +77,7 @@ function llenar_datos() {
                 }
                 td.setAttribute('onclick', 'mover(this);')
             } else {
-                td.innerText = '|'
+                td.innerText = '+'
             }
             if (verdad) td.classList.add('blanca')
             else td.classList.add('negra')
@@ -91,16 +91,23 @@ function llenar_datos() {
 function eliminar() {
     let todos = document.getElementsByTagName('td')
     for (const esto of todos) {
-        if (esto.classList.contains('oportunidad')) {
+        if (esto.classList.contains('oportunidad') || esto.getAttribute('onclick') == 'movimiento(this);') {
             esto.classList.remove('oportunidad')
-            esto.removeAttribute('onclick')
+            esto.setAttribute('onclick', '')
         }
     }
 }
 
 function dar_clickeo(nuevo) {
+    if (nuevo.classList.contains(tipo['color'])) {
+        return false
+    } 
     nuevo.classList.add('oportunidad')
     nuevo.setAttribute('onclick', 'movimiento(this);')
+    if (nuevo.classList.contains('blancas') || nuevo.classList.contains('negras')) {
+        return false
+    }
+    return true
 }
 
 function mover(data) {
@@ -110,6 +117,11 @@ function mover(data) {
         'tipo': 'movimiento', 
         'valor': pieza, 
         'original': data.id
+    }
+    if (data.classList.contains('negras')) {
+        tipo['color'] = 'negras'
+    } else if (data.classList.contains('blancas')) {
+        tipo['color'] = 'blancas'
     }
     let esto = '' + data.id
     let ubicacion = esto.split('-')
@@ -138,20 +150,42 @@ function mover(data) {
             break;
         case '♜': 
             let cuatro = []
-            for (let i = 1; i <= 8; i++) {
-                if (i != ubicacion[0]) {
-                    let nuevo = i + '-' + ubicacion[1]
-                    let este = document.getElementById(nuevo)
-                    dar_clickeo(este)
-                    cuatro.push(nuevo)
-                }
-                if (i != ubicacion[1]) {
-                    let nuevo = ubicacion[0] + '-' + i
-                    let este = document.getElementById(nuevo)
-                    dar_clickeo(este)
-                    cuatro.push(nuevo)
-                }
-            }
+            let i = ubicacion[0]
+            do {
+                i++
+                let nuevo = i + '-' + ubicacion[1]
+                let este = document.getElementById(nuevo)
+                if (este) {
+                    if (!dar_clickeo(este)) break
+                } else break
+            } while (i < 8);
+            i = ubicacion[1]
+            do {
+                i++
+                let nuevo = ubicacion[0] + '-' + i
+                let este = document.getElementById(nuevo)
+                if (este) {
+                    if (!dar_clickeo(este)) break
+                } else break
+            } while (i < 8);
+            i = ubicacion[0]
+            do {
+                i--
+                let nuevo = i + '-' + ubicacion[1]
+                let este = document.getElementById(nuevo)
+                if (este) {
+                    if (!dar_clickeo(este)) break
+                } else break
+            } while (i > 1);
+            i = ubicacion[1]
+            do {
+                i--
+                let nuevo = ubicacion[0] + '-' + i
+                let este = document.getElementById(nuevo)
+                if (este) {
+                    if (!dar_clickeo(este)) break
+                } else break
+            } while (i > 1);
             break
         case '♝': 
             let nuevo = 0
@@ -160,7 +194,7 @@ function mover(data) {
                 let lugar = (Number(ubicacion[0]) + nuevo) + '-' + (Number(ubicacion[1]) + nuevo)
                 let este = document.getElementById(lugar)
                 if (este) {
-                    dar_clickeo(este)
+                    if (!dar_clickeo(este)) break
                 } else break
             } while (true);
             nuevo = 0
@@ -169,7 +203,7 @@ function mover(data) {
                 let lugar = (Number(ubicacion[0]) - nuevo) + '-' + (Number(ubicacion[1]) - nuevo)
                 let este = document.getElementById(lugar)
                 if (este) {
-                    dar_clickeo(este)
+                    if (!dar_clickeo(este)) break
                 } else break
             } while (true);
             nuevo = 0
@@ -178,7 +212,7 @@ function mover(data) {
                 let lugar = (Number(ubicacion[0]) - nuevo) + '-' + (Number(ubicacion[1]) + nuevo)
                 let este = document.getElementById(lugar)
                 if (este) {
-                    dar_clickeo(este)
+                    if (!dar_clickeo(este)) break
                 } else break
             } while (true);
             nuevo = 0
@@ -187,7 +221,7 @@ function mover(data) {
                 let lugar = (Number(ubicacion[0]) + nuevo) + '-' + (Number(ubicacion[1]) - nuevo)
                 let este = document.getElementById(lugar)
                 if (este) {
-                    dar_clickeo(este)
+                    if (!dar_clickeo(este)) break
                 } else break
             } while (true);
             break
@@ -204,30 +238,54 @@ function mover(data) {
             for (const nuevo of Ele) {
                 let este = document.getElementById(nuevo)
                 if (este) {
-                    dar_clickeo(este)
+                    if (!dar_clickeo(este)) continue
                 }
             }
             break
         case '♛': 
-            for (let i = 1; i <= 8; i++) {
-                if (i != ubicacion[0]) {
-                    let variable = i + '-' + ubicacion[1]
-                    let este = document.getElementById(variable)
-                    dar_clickeo(este)
-                }
-                if (i != ubicacion[1]) {
-                    let variable = ubicacion[0] + '-' + i
-                    let este = document.getElementById(variable)
-                    dar_clickeo(este)
-                }
-            }
+            let j = ubicacion[0]
+            do {
+                j++
+                let nuevo = j + '-' + ubicacion[1]
+                let este = document.getElementById(nuevo)
+                if (este) {
+                    if (!dar_clickeo(este)) break
+                } else break
+            } while (j < 8);
+            j = ubicacion[1]
+            do {
+                j++
+                let nuevo = ubicacion[0] + '-' + j
+                let este = document.getElementById(nuevo)
+                if (este) {
+                    if (!dar_clickeo(este)) break
+                } else break
+            } while (j < 8);
+            j = ubicacion[0]
+            do {
+                j--
+                let nuevo = j + '-' + ubicacion[1]
+                let este = document.getElementById(nuevo)
+                if (este) {
+                    if (!dar_clickeo(este)) break
+                } else break
+            } while (j > 1);
+            j = ubicacion[1]
+            do {
+                j--
+                let nuevo = ubicacion[0] + '-' + j
+                let este = document.getElementById(nuevo)
+                if (este) {
+                    if (!dar_clickeo(este)) break
+                } else break
+            } while (j > 1);
             diagonales = 0
             do {
                 diagonales++
                 let lugar = (Number(ubicacion[0]) + diagonales) + '-' + (Number(ubicacion[1]) + diagonales)
                 let este = document.getElementById(lugar)
                 if (este) {
-                    dar_clickeo(este)
+                    if (!dar_clickeo(este)) break
                 } else break
             } while (true);
             diagonales = 0
@@ -236,7 +294,7 @@ function mover(data) {
                 let lugar = (Number(ubicacion[0]) - diagonales) + '-' + (Number(ubicacion[1]) - diagonales)
                 let este = document.getElementById(lugar)
                 if (este) {
-                    dar_clickeo(este)
+                    if (!dar_clickeo(este)) break
                 } else break
             } while (true);
             diagonales = 0
@@ -245,7 +303,7 @@ function mover(data) {
                 let lugar = (Number(ubicacion[0]) - diagonales) + '-' + (Number(ubicacion[1]) + diagonales)
                 let este = document.getElementById(lugar)
                 if (este) {
-                    dar_clickeo(este)
+                    if (!dar_clickeo(este)) break
                 } else break
             } while (true);
             diagonales = 0
@@ -254,7 +312,7 @@ function mover(data) {
                 let lugar = (Number(ubicacion[0]) + diagonales) + '-' + (Number(ubicacion[1]) - diagonales)
                 let este = document.getElementById(lugar)
                 if (este) {
-                    dar_clickeo(este)
+                    if (!dar_clickeo(este)) break
                 } else break
             } while (true);
             break
@@ -279,14 +337,6 @@ function mover(data) {
         default:
             break;
     }
-    // data.removeAttribute('onclick')
-    if (data.classList.contains('negras')) {
-        tipo['color'] = 'negras'
-        // data.classList.remove('negras')
-    } else if (data.classList.contains('blancas')) {
-        tipo['color'] = 'blancas'
-        // data.classList.remove('blancas')
-    }
     ws.send(JSON.stringify(tipo))
 }
 
@@ -300,6 +350,7 @@ function movimiento(data) {
         data.classList.remove('blancas')
     }
     ws.send(JSON.stringify(tipo))
+    eliminar()
 }
 
 llenar_datos()
