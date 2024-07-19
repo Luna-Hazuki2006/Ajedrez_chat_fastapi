@@ -4,6 +4,7 @@ from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
 from posibilidades import router as posibilidades
 from piezas import router as piezas
+from partidas import router as partidas
 import json
 
 app = FastAPI()
@@ -12,8 +13,9 @@ app.mount("/static", StaticFiles(directory="./static"), name="static")
 
 templates = Jinja2Templates(directory="./templates")
 
-app.include_router(posibilidades.router, prefix='/posibilidades')
-app.include_router(piezas.router, prefix='/piezas')
+app.include_router(posibilidades.router, prefix='/posibilidades', tags=['Posibilidades'])
+app.include_router(piezas.router, prefix='/piezas', tags=['Piezas'])
+app.include_router(partidas.router, prefix='/partidas', tags=['Partidas'])
 
 class ConnectionManager:
     def __init__(self):
@@ -67,4 +69,8 @@ async def websocket_endpoint(websocket: WebSocket, client_id: int):
 
     except WebSocketDisconnect:
         manager.disconnect(websocket)
-        await manager.broadcast(f"Client #{client_id} left the chat")
+        data = {
+            'tipo': 'mensaje', 
+            'valor': f"Client #{client_id} left the chat"
+        }
+        await manager.broadcast(json.dumps(data))

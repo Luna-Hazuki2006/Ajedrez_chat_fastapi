@@ -24,11 +24,17 @@ ws.onmessage = function(event) {
                 nueva.classList.add('blancas')
             }
             nueva.setAttribute('onclick', 'mover(this);')
+            nueva.setAttribute('ondblclick', 'eliminar();')
             borrar.innerText = '|'
             nueva.innerText = data['valor']
         } else {
             borrar.classList.add(data['color'])
         }
+    }
+    if (data['usuario'] == client_id) {
+        pausar()
+    } else {
+        recordar()
     }
 };
 function sendMessage(event) {
@@ -53,6 +59,7 @@ function llenar_datos() {
             if (i == 2 || i == 7) {
                 td.innerText = '♟'
                 td.setAttribute('onclick', 'mover(this);')
+                td.setAttribute('ondblclick', 'eliminar();')
                 if (i == 2) {
                     td.classList.add('blancas')
                 } else if (i == 7) {
@@ -76,6 +83,7 @@ function llenar_datos() {
                     td.classList.add('negras')
                 }
                 td.setAttribute('onclick', 'mover(this);')
+                td.setAttribute('ondblclick', 'eliminar();')
             } else {
                 td.innerText = '+'
             }
@@ -93,7 +101,31 @@ function eliminar() {
     for (const esto of todos) {
         if (esto.classList.contains('oportunidad') || esto.getAttribute('onclick') == 'movimiento(this);') {
             esto.classList.remove('oportunidad')
-            esto.setAttribute('onclick', '')
+            esto.removeAttribute('onclick')
+            esto.removeAttribute('ondblclick')
+        }
+    }
+    recordar()
+}
+
+function recordar() {
+    let todos = document.getElementsByTagName('td')
+    for (const esto of todos) {
+        if (esto.innerText != '|' && esto.innerText != '+') {
+            esto.setAttribute('onclick', 'mover(this);')
+            esto.setAttribute('ondblclick', 'eliminar();')
+        }
+    }
+}
+
+function pausar() {
+    let todos = document.getElementsByTagName('td')
+    for (const esto of todos) {
+        if (esto.innerText != '|' && esto.innerText != '+') {
+            esto.removeAttribute('onclick')
+            esto.removeAttribute('ondblclick')
+        } else {
+            esto.removeAttribute('onclick')
         }
     }
 }
@@ -104,6 +136,7 @@ function dar_clickeo(nuevo) {
     } 
     nuevo.classList.add('oportunidad')
     nuevo.setAttribute('onclick', 'movimiento(this);')
+    nuevo.removeAttribute('ondblclick')
     if (nuevo.classList.contains('blancas') || nuevo.classList.contains('negras')) {
         return false
     }
@@ -128,12 +161,12 @@ function mover(data) {
 
     switch (tipo.valor) {
         case '♟':
-            if (ubicacion[0] == 2) {
+            if (ubicacion[0] == 2 && tipo['color'] == 'blancas') {
                 let posibilidad = document.getElementById(Number(ubicacion[0]) + 1 + '-' + ubicacion[1])
                 dar_clickeo(posibilidad)
                 posibilidad = document.getElementById(Number(ubicacion[0]) + 2 + '-' + ubicacion[1])
                 dar_clickeo(posibilidad)
-            } else if (ubicacion[0] == 7) {
+            } else if (ubicacion[0] == 7 && tipo['color'] == 'negras') {
                 let posibilidad = document.getElementById(Number(ubicacion[0]) - 1 + '-' + ubicacion[1])
                 dar_clickeo(posibilidad)
                 posibilidad = document.getElementById(Number(ubicacion[0]) - 2 + '-' + ubicacion[1])
@@ -344,6 +377,7 @@ function movimiento(data) {
     let original = document.getElementById(tipo['original'])
     original.classList.remove('negras', 'blancas')
     tipo['nuevo'] = data.id
+    tipo['usuario'] = client_id
     if (data.classList.contains('negras')) {
         data.classList.remove('negras')
     } else if (data.classList.contains('blancas')) {
