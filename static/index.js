@@ -30,11 +30,11 @@ ws.onmessage = function(event) {
         } else {
             borrar.classList.add(data['color'])
         }
-    }
-    if (data['usuario'] == client_id) {
-        pausar()
-    } else {
-        recordar()
+        if (data['usuario'] == client_id) {
+            pausar()
+        } else {
+            recordar()
+        }
     }
 };
 function sendMessage(event) {
