@@ -16,5 +16,5 @@ async def Listar_Partidas():
         for esto in Partidas.find({})]
     return lista
 
-async def Borrar_Pieza(id : int): 
+async def Borrar_Partida(id : int): 
     Partidas.delete_one({'id': id})

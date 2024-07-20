@@ -2,7 +2,7 @@ var client_id = Date.now()
 let tabla = document.getElementById('tablero')
 let tipo = {}
 document.querySelector("#ws-id").textContent = client_id;
-var ws = new WebSocket(`ws://ajedrez-chat-fastapi.onrender.com//ws/${client_id}`);
+var ws = new WebSocket(`wss://localhost:8000/ws/${client_id}`);
 ws.onmessage = function(event) {
     data = JSON.parse(event.data)
     console.log(data);
@@ -172,12 +172,10 @@ function mover(data) {
                     } 
                 } 
                 posibilidad = document.getElementById((Number(ubicacion[0]) + 1) + '-' + (Number(ubicacion[1]) + 1))
-                console.log(posibilidad)
                 if (posibilidad?.classList.contains('negras')) {
                     dar_clickeo(posibilidad)
                 }
                 posibilidad = document.getElementById((Number(ubicacion[0]) + 1) + '-' + (Number(ubicacion[1]) - 1))
-                console.log(posibilidad)
                 if (posibilidad?.classList.contains('negras')) {
                     dar_clickeo(posibilidad)
                 }
@@ -191,12 +189,10 @@ function mover(data) {
                     }
                 }
                 posibilidad = document.getElementById((Number(ubicacion[0])) - 1 + '-' + (Number(ubicacion[1]) + 1))
-                console.log(posibilidad)
                 if (posibilidad?.classList.contains('blancas')) {
                     dar_clickeo(posibilidad)
                 }
                 posibilidad = document.getElementById((Number(ubicacion[0]) - 1) + '-' + (Number(ubicacion[1]) - 1))
-                console.log(posibilidad)
                 if (posibilidad?.classList.contains('blancas')) {
                     dar_clickeo(posibilidad)
                 }
@@ -207,12 +203,12 @@ function mover(data) {
                         dar_clickeo(posibilidad)
                     } 
                     posibilidad = document.getElementById((Number(ubicacion[0]) + 1) + '-' + (Number(ubicacion[1]) + 1))
-                    console.log(posibilidad)
+
                     if (posibilidad?.classList.contains('negras')) {
                         dar_clickeo(posibilidad)
                     }
                     posibilidad = document.getElementById((Number(ubicacion[0]) + 1) + '-' + (Number(ubicacion[1]) - 1))
-                    console.log(posibilidad)
+
                     if (posibilidad?.classList.contains('negras')) {
                         dar_clickeo(posibilidad)
                     }
@@ -222,12 +218,12 @@ function mover(data) {
                         dar_clickeo(posibilidad)
                     }
                     posibilidad = document.getElementById((Number(ubicacion[0]) - 1) + '-' + (Number(ubicacion[1]) + 1))
-                    console.log(posibilidad)
+
                     if (posibilidad?.classList.contains('blancas')) {
                         dar_clickeo(posibilidad)
                     }
                     posibilidad = document.getElementById((Number(ubicacion[0]) - 1) + '-' + (Number(ubicacion[1]) - 1))
-                    console.log(posibilidad)
+
                     if (posibilidad?.classList.contains('blancas')) {
                         dar_clickeo(posibilidad)
                     }

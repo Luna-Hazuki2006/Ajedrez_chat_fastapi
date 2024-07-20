@@ -19,7 +19,7 @@ async def crear_parida(parida : Partida):
     return creada
 
 @router.put('/{id}')
-async def modificar_parida(id : int, parida : Partida): 
+async def modificar_partida(id : int, parida : Partida): 
     return []
 
 @router.delete('/{id}')
