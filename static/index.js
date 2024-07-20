@@ -131,13 +131,14 @@ function pausar() {
 }
 
 function dar_clickeo(nuevo) {
-    if (nuevo.classList.contains(tipo['color'])) {
+    if (nuevo.classList.contains(tipo['color']) && nuevo.innerText != '|' && nuevo.innerText != '+') {
         return false
     } 
     nuevo.classList.add('oportunidad')
     nuevo.setAttribute('onclick', 'movimiento(this);')
     nuevo.removeAttribute('ondblclick')
-    if (nuevo.classList.contains('blancas') || nuevo.classList.contains('negras')) {
+    if ((nuevo.classList.contains('blancas') || nuevo.classList.contains('negras')) && 
+        (nuevo.innerText != '+' && nuevo.innerText != '|')) {
         return false
     }
     return true
@@ -163,21 +164,73 @@ function mover(data) {
         case '♟':
             if (ubicacion[0] == 2 && tipo['color'] == 'blancas') {
                 let posibilidad = document.getElementById(Number(ubicacion[0]) + 1 + '-' + ubicacion[1])
-                dar_clickeo(posibilidad)
-                posibilidad = document.getElementById(Number(ubicacion[0]) + 2 + '-' + ubicacion[1])
-                dar_clickeo(posibilidad)
+                if (posibilidad && !posibilidad?.classList.contains('blancas') && !posibilidad?.classList.contains('negras')) {
+                    dar_clickeo(posibilidad)
+                    posibilidad = document.getElementById(Number(ubicacion[0]) + 2 + '-' + ubicacion[1])
+                    if (posibilidad && !posibilidad?.classList.contains('blancas') && !posibilidad?.classList.contains('negras')) {
+                        dar_clickeo(posibilidad)
+                    } 
+                } 
+                posibilidad = document.getElementById((Number(ubicacion[0]) + 1) + '-' + (Number(ubicacion[1]) + 1))
+                console.log(posibilidad)
+                if (posibilidad?.classList.contains('negras')) {
+                    dar_clickeo(posibilidad)
+                }
+                posibilidad = document.getElementById((Number(ubicacion[0]) + 1) + '-' + (Number(ubicacion[1]) - 1))
+                console.log(posibilidad)
+                if (posibilidad?.classList.contains('negras')) {
+                    dar_clickeo(posibilidad)
+                }
             } else if (ubicacion[0] == 7 && tipo['color'] == 'negras') {
                 let posibilidad = document.getElementById(Number(ubicacion[0]) - 1 + '-' + ubicacion[1])
-                dar_clickeo(posibilidad)
-                posibilidad = document.getElementById(Number(ubicacion[0]) - 2 + '-' + ubicacion[1])
-                dar_clickeo(posibilidad)
+                if (posibilidad && !posibilidad?.classList.contains('blancas') && !posibilidad?.classList.contains('negras')) {
+                    dar_clickeo(posibilidad)
+                    posibilidad = document.getElementById(Number(ubicacion[0]) - 2 + '-' + ubicacion[1])
+                    if (posibilidad && !posibilidad?.classList.contains('blancas') && !posibilidad?.classList.contains('negras')) {
+                        dar_clickeo(posibilidad)
+                    }
+                }
+                posibilidad = document.getElementById((Number(ubicacion[0])) - 1 + '-' + (Number(ubicacion[1]) + 1))
+                console.log(posibilidad)
+                if (posibilidad?.classList.contains('blancas')) {
+                    dar_clickeo(posibilidad)
+                }
+                posibilidad = document.getElementById((Number(ubicacion[0]) - 1) + '-' + (Number(ubicacion[1]) - 1))
+                console.log(posibilidad)
+                if (posibilidad?.classList.contains('blancas')) {
+                    dar_clickeo(posibilidad)
+                }
             } else {
                 if (data.classList.contains('blancas')) {
                     let posibilidad = document.getElementById(Number(ubicacion[0]) + 1 + '-' + ubicacion[1])
-                    dar_clickeo(posibilidad)
+                    if (posibilidad && !posibilidad?.classList.contains('blancas') && !posibilidad?.classList.contains('negras')) {
+                        dar_clickeo(posibilidad)
+                    } 
+                    posibilidad = document.getElementById((Number(ubicacion[0]) + 1) + '-' + (Number(ubicacion[1]) + 1))
+                    console.log(posibilidad)
+                    if (posibilidad?.classList.contains('negras')) {
+                        dar_clickeo(posibilidad)
+                    }
+                    posibilidad = document.getElementById((Number(ubicacion[0]) + 1) + '-' + (Number(ubicacion[1]) - 1))
+                    console.log(posibilidad)
+                    if (posibilidad?.classList.contains('negras')) {
+                        dar_clickeo(posibilidad)
+                    }
                 } else if (data.classList.contains('negras')) {
                     let posibilidad = document.getElementById(Number(ubicacion[0]) - 1 + '-' + ubicacion[1])
-                    dar_clickeo(posibilidad)
+                    if (posibilidad && !posibilidad?.classList.contains('blancas') && !posibilidad?.classList.contains('negras')) {
+                        dar_clickeo(posibilidad)
+                    }
+                    posibilidad = document.getElementById((Number(ubicacion[0]) - 1) + '-' + (Number(ubicacion[1]) + 1))
+                    console.log(posibilidad)
+                    if (posibilidad?.classList.contains('blancas')) {
+                        dar_clickeo(posibilidad)
+                    }
+                    posibilidad = document.getElementById((Number(ubicacion[0]) - 1) + '-' + (Number(ubicacion[1]) - 1))
+                    console.log(posibilidad)
+                    if (posibilidad?.classList.contains('blancas')) {
+                        dar_clickeo(posibilidad)
+                    }
                 }
             }
             break;
@@ -370,7 +423,7 @@ function mover(data) {
         default:
             break;
     }
-    ws.send(JSON.stringify(tipo))
+    // ws.send(JSON.stringify(tipo))
 }
 
 function movimiento(data) {
@@ -383,8 +436,8 @@ function movimiento(data) {
     } else if (data.classList.contains('blancas')) {
         data.classList.remove('blancas')
     }
-    ws.send(JSON.stringify(tipo))
     eliminar()
+    ws.send(JSON.stringify(tipo))
 }
 
 llenar_datos()
