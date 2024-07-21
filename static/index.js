@@ -1,8 +1,9 @@
 var client_id = Date.now()
 let tabla = document.getElementById('tablero')
 let tipo = {}
-document.querySelector("#ws-id").textContent = client_id;
+// document.querySelector("#ws-id").textContent = client_id;
 var ws = new WebSocket(`wss://ajedrez-chat-fastapi.onrender.com/ws/${client_id}`);
+var ws = new WebSocket(`ws://localhost:8000/ws/${client_id}`);
 ws.onmessage = function(event) {
     data = JSON.parse(event.data)
     console.log(data);
@@ -34,6 +35,10 @@ ws.onmessage = function(event) {
             pausar()
         } else {
             recordar()
+        }
+        if (data['ganado']) {
+            alert('Ganaron las ' + data['color'])
+            pausar()
         }
     }
 };
@@ -432,6 +437,9 @@ function movimiento(data) {
     } else if (data.classList.contains('blancas')) {
         data.classList.remove('blancas')
     }
+    if (data.innerText == '♚') {
+        tipo['ganado'] = true
+    } else tipo['ganado'] = false
     eliminar()
     ws.send(JSON.stringify(tipo))
 }
