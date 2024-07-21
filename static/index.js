@@ -37,8 +37,14 @@ ws.onmessage = function(event) {
             recordar()
         }
         if (data['ganado']) {
-            alert('Ganaron las ' + data['color'])
+            let final = 'Ganaron las ' + data['color']
+            alert(final)
             pausar()
+            var messages = document.getElementById('messages')
+            var message = document.createElement('li')
+            var content = document.createTextNode(final)
+            message.appendChild(content)
+            messages.appendChild(message)   
         }
     }
 };
