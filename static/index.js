@@ -1,9 +1,9 @@
 var client_id = Date.now()
 let tabla = document.getElementById('tablero')
 let tipo = {}
-// document.querySelector("#ws-id").textContent = client_id;
+document.querySelector("#ws-id").textContent = client_id;
 var ws = new WebSocket(`wss://ajedrez-chat-fastapi.onrender.com/ws/${client_id}`);
-var ws = new WebSocket(`ws://localhost:8000/ws/${client_id}`);
+// var ws = new WebSocket(`ws://localhost:8000/ws/${client_id}`);
 ws.onmessage = function(event) {
     data = JSON.parse(event.data)
     console.log(data);
