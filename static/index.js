@@ -2,6 +2,7 @@ var client_id = Date.now()
 let tabla = document.getElementById('tablero')
 let tipo = {}
 document.querySelector("#ws-id").textContent = client_id;
+let cambio = new Audio("mover.ogg")
 var ws = new WebSocket(`wss://ajedrez-chat-fastapi.onrender.com/ws/${client_id}`);
 // var ws = new WebSocket(`ws://localhost:8000/ws/${client_id}`);
 ws.onmessage = function(event) {
@@ -17,6 +18,7 @@ ws.onmessage = function(event) {
         let borrar = document.getElementById(data['original'])
         let nueva = document.getElementById(data['nuevo'])
         if (nueva) {
+            cambio.play()
             nueva.classList.remove('negras')
             nueva.classList.remove('blancas')
             if (data['color'] == 'negras') {
