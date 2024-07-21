@@ -52,9 +52,10 @@ async def websocket_endpoint(websocket: WebSocket, client_id: int):
             data = await websocket.receive_text()
             real = json.loads(data)
             if real['tipo'] == 'mensaje': 
-                real['valor'] = f"You wrote: {real['valor']}"
+                valor = real['valor']
+                real['valor'] = f"You wrote: {valor}"
                 await manager.send_personal_message(json.dumps(real), websocket)
-                real['valor'] = f"Client #{client_id} says: {real['valor']}"
+                real['valor'] = f"Client #{client_id} says: {valor}"
                 await manager.broadcast(json.dumps(real))
             if real['tipo'] == 'movimiento': 
                 # nuevo = str(real['original'])
