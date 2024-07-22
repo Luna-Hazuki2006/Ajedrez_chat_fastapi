@@ -2,6 +2,7 @@ from fastapi import APIRouter, Request
 from partidas.schemas import Partida
 import partidas.service as servicio
 from fastapi.templating import Jinja2Templates
+from datetime import datetime
 
 router = APIRouter()
 
@@ -18,10 +19,15 @@ async def listar_partidas(request : Request):
 async def obtener_partida(id : int): 
     return []
 
-@router.post('/crear_partida')
-async def crear_partida(parida : Partida): 
-    creada = await servicio.Crear_Partida(parida)
-    return creada
+@router.post('')
+async def crear_partida(request : Request): 
+    hoy = datetime.now().microsecond
+    partida = Partida(id=1, creacion=hoy, estado='creado', completo=False)
+    print(partida)
+    creada = await servicio.Crear_Partida(partida)
+    return templates.TemplateResponse('juego.html', {
+        'request': request, 'creada': creada
+    })
 
 @router.put('/{id}')
 async def modificar_partida(id : int, parida : Partida): 

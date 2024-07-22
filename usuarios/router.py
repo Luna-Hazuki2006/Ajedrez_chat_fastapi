@@ -56,8 +56,8 @@ async def iniciar_sesion(request: Request,
         if usuario: 
             nombre_completo = f'{usuario.nombres} {usuario.apellidos}'
             atoken = auth_handler.create_access_token(data={'nombre_usuario': usuario.nombre_usuario, 'nombre_completo': nombre_completo})
-            response = templates.TemplateResponse("success.html", 
-                {"request": request, "nombre_completo": nombre_completo, "path_route": '/principal'})
+            response = templates.TemplateResponse("principal.html", 
+                {"request": request, "nombre_completo": nombre_completo})
             response.set_cookie(key="Authorization", value= f"{atoken}", httponly=True)
             return response
         else: return 'No se pudo iniciar sesión'
