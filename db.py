@@ -8,3 +8,4 @@ Movimientos = db.Movimientos
 Piezas = db.Piezas
 Posibilidades = db.Posibilidades
 Partidas = db.Partidas
+Usuarios = db.Usuarios

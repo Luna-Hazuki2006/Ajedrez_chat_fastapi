@@ -1,20 +1,25 @@
-from fastapi import APIRouter
+from fastapi import APIRouter, Request
 from partidas.schemas import Partida
 import partidas.service as servicio
+from fastapi.templating import Jinja2Templates
 
 router = APIRouter()
 
-@router.get('', response_model=list[Partida])
-async def listar_partidas(): 
+templates = Jinja2Templates(directory="./templates")
+
+@router.get('')
+async def listar_partidas(request : Request): 
     lista = await servicio.Listar_Partidas()
-    return lista
+    return templates.TemplateResponse('principal.html', {
+        'request': request, 'lista': lista
+    })
 
 @router.get('/{id}')
-async def obtener_parida(id : int): 
+async def obtener_partida(id : int): 
     return []
 
-@router.post('')
-async def crear_parida(parida : Partida): 
+@router.post('/crear_partida')
+async def crear_partida(parida : Partida): 
     creada = await servicio.Crear_Partida(parida)
     return creada
 

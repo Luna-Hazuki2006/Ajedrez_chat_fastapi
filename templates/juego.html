@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Chat</title>
+        <link rel="stylesheet" href="{{ url_for('static', path='styles.css') }}">
+        <link rel="shortcut icon" href="{{ url_for('static', path='queso.ico') }}" type="image/x-icon">
+        <script src="{{ url_for('static', path='index_jugar.js') }}" defer></script>
+    </head>
+    <body>
+        <h1>WebSocket Chat</h1>
+        <h2>Your ID: <span id="ws-id"></span></h2>
+        <table id="tablero">
+        </table>
+        <form action="" onsubmit="sendMessage(event)">
+            <input type="text" id="messageText" autocomplete="off"/>
+            <button>Send</button>
+        </form>
+        <ul id='messages'>
+        </ul>
+    </body>
+</html>

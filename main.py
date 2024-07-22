@@ -1,10 +1,13 @@
-from fastapi import FastAPI, WebSocket, WebSocketDisconnect, Request
+from fastapi import FastAPI, WebSocket, WebSocketDisconnect, Request, status, Response
 # from fastapi.responses import HTMLResponse
 from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
+from fastapi.responses import RedirectResponse
 from posibilidades import router as posibilidades
 from piezas import router as piezas
 from partidas import router as partidas
+from usuarios import router as usuarios
+from usuarios.exceptions import LoginExpired, RequiresLoginException
 import json
 
 app = FastAPI()
@@ -16,6 +19,7 @@ templates = Jinja2Templates(directory="./templates")
 app.include_router(posibilidades.router, prefix='/posibilidades', tags=['Posibilidades'])
 app.include_router(piezas.router, prefix='/piezas', tags=['Piezas'])
 app.include_router(partidas.router, prefix='/partidas', tags=['Partidas'])
+app.include_router(usuarios.router, tags=['usuarios'])
 
 class ConnectionManager:
     def __init__(self):
@@ -40,13 +44,66 @@ manager = ConnectionManager()
 
 
 @app.get("/")
-async def get(request : Request):
-    return templates.TemplateResponse('inicio.html', {'request':request})
+async def obtener(request : Request):
+    return RedirectResponse(url='/partidas', status_code=status.HTTP_303_SEE_OTHER)
 
+@app.get('/juego')
+async def obtener(request : Request): 
+    return templates.TemplateResponse('juego.html', {'request': request})
+
+
+@app.exception_handler(RequiresLoginException)
+async def exception_handler(request: Request, exc: RequiresLoginException) -> Response:
+    return templates.TemplateResponse("message-redirection.html", {
+        "request": request, "message": exc.message, 
+        "path_route": exc.path_route, "path_message": exc.path_message})
+
+@app.exception_handler(LoginExpired)
+async def exception_handler(request: Request, exc: RequiresLoginException) -> Response:
+    return templates.TemplateResponse("message-redirection.html", {
+        "request": request, "message": exc.message, 
+        "path_route": exc.path_route, "path_message": exc.path_message})
+
+
+@app.middleware("http")
+async def create_auth_header(request: Request, call_next,):
+    '''
+    Check if there are cookies set for authorization. If so, construct the
+    Authorization header and modify the request (unless the header already
+    exists!)
+    '''
+    if ("Authorization" not in request.headers 
+        and "Authorization" in request.cookies
+        ):
+        access_token = request.cookies["Authorization"]
+        
+        request.headers.__dict__["_list"].append(
+            (
+                "authorization".encode(),
+                 f"Bearer {access_token}".encode(),
+            )
+        )
+    elif ("Authorization" not in request.headers 
+        and "Authorization" not in request.cookies
+        ): 
+        request.headers.__dict__["_list"].append(
+            (
+                "authorization".encode(),
+                 f"Bearer 12345".encode(),
+            )
+        )
+        
+    response = await call_next(request)
+    return response    
 
 @app.websocket("/ws/{client_id}")
 async def websocket_endpoint(websocket: WebSocket, client_id: int):
     await manager.connect(websocket)
+    data = {
+        'tipo': 'mensaje', 
+        'valor': f"Client #{client_id} has entered the chat"
+    }
+    await manager.broadcast(json.dumps(data))
     try:
         while True:
             data = await websocket.receive_text()

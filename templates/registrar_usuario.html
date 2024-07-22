@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{{ url_for('static', path='styles.css') }}">
+    <link rel="shortcut icon" href="{{ url_for('static', path='queso.ico') }}" type="image/x-icon">
+    <script src="{{ url_for('static', path='index.js') }}" defer></script>
+    <title>Document</title>
+</head>
+<body>
+    <h1>Registrar usuario</h1>
+    <form action="/registrar" method="post">
+        <fieldset>
+            <legend>Registrar usuario</legend>
+            <label for="nombre_usuario">
+                <span>Nombre de usuario: </span>
+                <input type="text" name="nombre_usuario" id="nombre_usuario" required>
+            </label>
+            <label for="nombres">
+                <span>Nombres: </span>
+                <input type="text" name="nombres" id="nombres" required>
+            </label>
+            <label for="apellidos">
+                <span>Apellidos: </span>
+                <input type="text" name="apellidos" id="apellidos" required>
+            </label>
+            <label for="correo">
+                <span>Correo electrónico: </span>
+                <input type="email" name="correo" id="correo" required>
+            </label>
+            <label for="imagen">
+                <span>Imagen de perfil: </span>
+                <div>
+                    <input type="file" name="extraccion" id="extraccion" accept="image/*" oninput="mostrar_imagen();" required>
+                    <button type="button" onclick="deimaginar();">Quitar imagen</button>
+                </div>
+                <img id="externa" src="" alt="Si ves esto, no tienes una imagen">
+                <input type="hidden" name="imagen" id="imagen" required>
+            </label>
+            <label for="nacimiento">
+                <span>Fecha de nacimiento: </span>
+                <input type="date" name="nacimiento" id="nacimiento" max="{{ hoy }}" required>
+            </label>
+            <label for="contraseña">
+                <span>Contraseña: </span>
+                <input type="password" name="contraseña" id="contraseña" required>
+            </label>
+            <!-- <label for="repeticion">
+                <span>Contraseña (de nuevo): </span>
+                <input type="password" name="repeticion" id="repeticion" required>
+            </label> -->
+            <button type="submit">Registrar</button>
+            <p>
+                ¿Ya tienes cuenta? 
+                <a href="/iniciar_sesion">¡Inicia sesión!</a>
+            </p>
+        </fieldset>
+    </form>
+</body>
+</html>
