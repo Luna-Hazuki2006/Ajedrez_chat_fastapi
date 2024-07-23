@@ -9,6 +9,7 @@ from partidas import router as partidas
 from usuarios import router as usuarios
 from usuarios.exceptions import LoginExpired, RequiresLoginException
 import json
+import time
 
 app = FastAPI()
 
@@ -132,3 +133,18 @@ async def websocket_endpoint(websocket: WebSocket, client_id: int):
             'valor': f"Client #{client_id} left the chat"
         }
         await manager.broadcast(json.dumps(data))
+
+
+@app.websocket("/ws_salas")
+async def websocket_endpoint(websocket: WebSocket):
+    await manager.connect(websocket)
+    todo = await partidas.servicio.Listar_Partidas()
+    await manager.broadcast(json.dumps(todo))
+    try:
+        while True:
+            await time.sleep(5)
+            todo = await partidas.servicio.Listar_Partidas()
+            await manager.broadcast(json.dumps(todo))
+
+    except WebSocketDisconnect:
+        manager.disconnect(websocket)

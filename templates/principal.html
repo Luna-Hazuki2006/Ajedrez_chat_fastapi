@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="{{ url_for('static', path='styles.css') }}">
     <link rel="shortcut icon" href="{{ url_for('static', path='queso.ico') }}" type="image/x-icon">
+    <script src="{{ url_for('static', path='index_salas.js') }}" defer></script>
     <title>Document</title>
 </head>
 <body>
@@ -15,9 +16,17 @@
     <a href="/registrar">
         <button type="button">Registrar usuario</button>
     </a>
-    <form action="/partidas" method="post">
+    <form action="/partidas/anonimo" method="post">
         <button type="submit">Crear partida como invitado</button>
     </form>
-    <ul id="salas"></ul>
+    <ul id="salas">
+        {% for esto in lista %}
+        <li>
+            <a href="/partidas/{{ esto['id'] }}">
+                {{ esto['creacion'] }}
+            </a>
+        </li>
+        {% endfor %}
+    </ul>
 </body>
 </html>

@@ -4,6 +4,7 @@ from fastapi.responses import HTMLResponse, RedirectResponse
 from usuarios.service import AuthHandler, Registrar
 from usuarios.schemas import Usuario
 from datetime import datetime
+from schemas import Token
 
 router = APIRouter()
 
@@ -50,7 +51,7 @@ def registrar_usuario(request: Request):
 async def iniciar_sesion(request: Request, 
                          response: Response, 
                          nombre_usuario: str = Form(...), 
-                         contraseña: str = Form(...)): 
+                         contraseña: str = Form(...)) -> Token: 
     usuario = await auth_handler.authenticate_user(nombre_usuario, contraseña)
     try:
         if usuario: 

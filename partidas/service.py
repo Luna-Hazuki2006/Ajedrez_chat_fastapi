@@ -10,11 +10,17 @@ async def Crear_Partida(pieza : Partida):
 
 async def Listar_Partidas(): 
     lista = []
-    [lista.append(dict(Partida(
-        id=esto['id'], 
-        creacion=esto['creacion']))) 
-        for esto in Partidas.find({})]
+    for esto in Partidas.find({'completo': False}): 
+        lista.append(esto)
     return lista
+
+async def buscar_partida(id : int): 
+    esto = Partidas.find_one({'id': id})
+    return Partida(id=esto['id'], 
+                   creacion=esto['creacion'],  
+                   participantes=esto['participantes'], 
+                   estado=esto['estado'], 
+                   completo=esto['completo'])
 
 async def Borrar_Partida(id : int): 
     Partidas.delete_one({'id': id})
