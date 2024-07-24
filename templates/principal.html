@@ -19,14 +19,31 @@
     <form action="/partidas/anonimo" method="post">
         <button type="submit">Crear partida como invitado</button>
     </form>
-    <ul id="salas">
-        {% for esto in lista %}
-        <li>
+    <button class="recargar" onclick="recargar();" type="button">🔄</button>
+    <dl>
+    {% for esto in lista %}
+        <dt>
             <a href="/partidas/{{ esto['id'] }}">
                 {{ esto['creacion'] }}
             </a>
-        </li>
-        {% endfor %}
-    </ul>
+        </dt>
+        {% if esto['participantes'] != None %}
+        <dd>
+            La sala tiene {{ esto['participantes'].__len__() }} participantes 
+            {% if esto['completo'] %}
+            y dos de ellos ya jugando
+            {% else %}
+            y aún no ha empezado la partida
+            {% endif %}
+            <br> <br>
+        </dd>
+        {% else %}
+        <dd>
+            La sala está vacía 
+            <br> <br>
+        </dd>
+        {% endif %}
+    {% endfor %}
+    </dl>
 </body>
 </html>

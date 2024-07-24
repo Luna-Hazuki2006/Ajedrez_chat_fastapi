@@ -86,3 +86,11 @@ fieldset p {
 .oportunidad:hover {
     cursor: pointer;
 }
+
+.recargar {
+    font-size: xx-large;
+}
+
+.recargar:hover {
+    cursor: pointer;
+}
