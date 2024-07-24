@@ -6,5 +6,7 @@ class Partida(BaseModel):
     id: Optional[int] = None
     creacion: Union[datetime, int]
     participantes: Optional[list] = None
+    jugadores: Optional[list] = None
+    tablero: list[list]
     estado: str
     completo: bool

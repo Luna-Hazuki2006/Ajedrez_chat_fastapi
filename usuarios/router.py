@@ -62,7 +62,7 @@ async def iniciar_sesion(request: Request,
             response.set_cookie(key="Authorization", value= f"{atoken}", httponly=True)
             return response
         else: return 'No se pudo iniciar sesión'
-            # return templates.TemplateResponse("error.html",
+            # return templates.TemplateResponse("error.html", 
             # {"request": request, 'detail': 'Incorrect Username or Password', 'status_code': 404 })
 
     except Exception as err:

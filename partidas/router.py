@@ -23,7 +23,17 @@ async def obtener_partida(id : int):
 @router.post('/anonimo')
 async def crear_partida(request : Request): 
     hoy = datetime.today()
-    partida = Partida(id=0, creacion=hoy, estado='creado', completo=False)
+    partida = Partida(id=0, creacion=hoy, estado='creado', completo=False, 
+                      tablero=[
+                          ['♜', '♞', '♝', '♛', '♚', '♝', '♞', '♜'], 
+                          ['♟', '♟', '♟', '♟', '♟', '♟', '♟', '♟'], 
+                          ['', '', '', '', '', '', '', ''], 
+                          ['', '', '', '', '', '', '', ''], 
+                          ['', '', '', '', '', '', '', ''], 
+                          ['', '', '', '', '', '', '', ''], 
+                          ['♙', '♙', '♙', '♙', '♙', '♙', '♙', '♙'], 
+                          ['♖', '♘', '♗', '♕', '♔', '♗', '♘', '♖']
+                      ])
     print(partida)
     creada = await servicio.Crear_Partida(partida)
     return templates.TemplateResponse('juego.html', {

@@ -10,7 +10,19 @@
         <h1>WebSocket Chat</h1>
         <h2>Your ID: <span id="ws-id"></span></h2>
         <table id="tablero">
+            {% for esto in creada['tablero'] %}
+            <tr>
+                {% for esta in esto %}
+                {% if esta == '' %}
+                <td id="{{  }}">+</td>
+                {% else %}
+                <td>{{ esta }}</td>
+                {% endif %}
+                {% endfor %}
+            </tr>
+            {% endfor %}
         </table>
+        <input type="hidden" name="real" id="real" value="{{ creada['id'] }}">
         <form action="" onsubmit="sendMessage(event)">
             <input type="text" id="messageText" autocomplete="off"/>
             <button>Send</button>
