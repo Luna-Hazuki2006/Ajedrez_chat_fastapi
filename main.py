@@ -116,13 +116,11 @@ async def websocket_endpoint(websocket: WebSocket, client_id: int):
                 real['valor'] = f"Client #{client_id} says: {valor}"
                 await manager.broadcast(json.dumps(real))
             if real['tipo'] == 'movimiento': 
-                # nuevo = str(real['original'])
-                # lista = nuevo.split('-')
-                # if real['color'] == 'blancas':
-                #     nuevo = f'{int(lista[0]) + 2}-{lista[1]}'
-                # elif real['color'] == 'negras': 
-                #     nuevo = f'{int(lista[0]) - 2}-{lista[1]}'
-                # real['nuevo'] = nuevo
+                actual = await partidas.servicio.mover_pieza(id=real['id'], 
+                                                       original=real['original'], 
+                                                       nueva=real['nuevo'], 
+                                                       pieza=real['valor'])
+                print(actual)
                 await manager.send_personal_message(json.dumps(real), websocket)
                 await manager.broadcast(json.dumps(real))
 
