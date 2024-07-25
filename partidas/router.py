@@ -16,9 +16,11 @@ async def listar_partidas(request : Request):
     })
 
 @router.get('/{id}')
-async def obtener_partida(id : int): 
+async def obtener_partida(request : Request, id : int): 
     este = await servicio.buscar_partida(id)
-    return este
+    return templates.TemplateResponse('juego.html', {
+        'request': request, 'creada': este
+    })
 
 @router.post('/anonimo')
 async def crear_partida(request : Request): 

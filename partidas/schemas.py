@@ -5,8 +5,11 @@ from datetime import datetime
 class Partida(BaseModel):
     id: Optional[int] = None
     creacion: Union[datetime, int]
-    participantes: Optional[list] = None
-    jugadores: Optional[list] = None
+    participantes: list = []
+    jugadores: list = []
+    mensajes: list[str] = []
+    comidas: list[str] = []
+    movimientos: list = []
     tablero: list[list]
     estado: str
     completo: bool

@@ -8,26 +8,34 @@
     </head>
     <body>
         <h1>WebSocket Chat</h1>
-        <h2>Your ID: <span id="ws-id"></span></h2>
-        <table id="tablero">
-            {% for i in range(creada['tablero'].__len__()) %}
-            <tr>
-                {% for j in range(creada['tablero'][i].__len__()) %}
-                {% if creada['tablero'][i][j] == '' %}
-                <td id="{{ i + 1 }}-{{ j + 1 }}">+</td>
-                {% else %}
-                <td id="{{ i + 1 }}-{{ j + 1 }}" onclick="mover(this);" ondblclick="eliminar();">{{ creada['tablero'][i][j] }}</td>
-                {% endif %}
-                {% endfor %}
-            </tr>
-            {% endfor %}
-        </table>
         <input type="hidden" name="real" id="real" value="{{ creada['id'] }}">
-        <form action="" onsubmit="sendMessage(event)">
-            <input type="text" id="messageText" autocomplete="off"/>
-            <button>Send</button>
-        </form>
-        <ul id='messages'>
-        </ul>
+        <input type="hidden" name="actualidad" id="actualidad" value="{{ creada['completo'] }}">
+        <h2>Your ID: <span id="ws-id"></span></h2>
+        <main>
+            <table id="tablero">
+                {% for i in range(creada['tablero'].__len__()) %}
+                <tr>
+                    {% for j in range(creada['tablero'][i].__len__()) %}
+                    {% if creada['tablero'][i][j] == '' %}
+                    <td id="{{ i + 1 }}-{{ j + 1 }}">+</td>
+                    {% else %}
+                    <td id="{{ i + 1 }}-{{ j + 1 }}" onclick="mover(this);" ondblclick="eliminar();">{{ creada['tablero'][i][j] }}</td>
+                    {% endif %}
+                    {% endfor %}
+                </tr>
+                {% endfor %}
+            </table>
+            <div>
+                <ul id='messages'>
+                    {% for esto in creada['mensajes'] %}
+                    <li>{{ esto }}</li>
+                    {% endfor %}
+                </ul>
+                <form action="" onsubmit="sendMessage(event)">
+                    <input type="text" id="messageText" autocomplete="off"/>
+                    <button>Send</button>
+                </form>
+            </div>
+        </main>
     </body>
 </html>

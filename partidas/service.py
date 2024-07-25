@@ -19,6 +19,11 @@ async def buscar_partida(id : int):
     return Partida(id=esto['id'], 
                    creacion=esto['creacion'],  
                    participantes=esto['participantes'], 
+                   jugadores=esto['jugadores'], 
+                   movimiento=esto['movimientos'], 
+                   mensajes=esto['mensajes'], 
+                   comidas=esto['comidas'], 
+                   tablero=esto['tablero'], 
                    estado=esto['estado'], 
                    completo=esto['completo'])
 
@@ -26,20 +31,26 @@ async def Borrar_Partida(id : int):
     Partidas.delete_one({'id': id})
 
 async def mover_pieza(id : int, pieza : str, original : str, nueva : str): 
-    print('+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++')
     print(id)
-    esto = []
-    for todo in Partidas.find({}): 
-        if int(todo['id']) == id: 
-            print('////////////////////////////////////////////////////////////////////')
-            break
+    esto = await buscar_partida(int(id))
     nueva_original = original.split('-')
     nueva_original = [int(nueva_original[0]) - 1, int(nueva_original[1]) - 1]
     nueva_nueva = nueva.split('-')
     nueva_nueva = [int(nueva_nueva[0]) - 1, int(nueva_nueva[1]) - 1]
     print('****************************************************************')
+    esto.tablero[nueva_original[0]][nueva_original[1]] = '' 
+    if esto.tablero[nueva_nueva[0]][nueva_nueva[1]] != '': 
+        esto.comidas.append(esto.tablero[nueva_nueva[0]][nueva_nueva[1]])
+        if (esto.tablero[nueva_nueva[0]][nueva_nueva[1]] == '♔' or 
+            esto.tablero[nueva_nueva[0]][nueva_nueva[1]] == '♚'):
+            esto.completo = True
+    esto.tablero[nueva_nueva[0]][nueva_nueva[1]] = pieza
+    esto.movimientos.append({'pieza': pieza, 'inicio': original, 'final': nueva})
+    Partidas.replace_one({'id': int(id)}, dict(esto))
     print(esto)
-    esto['tablero'][nueva_original[0]][nueva_original[1]] = ''
-    esto['tablero'][nueva_nueva[0]][nueva_nueva[1]] = pieza
-    Partidas.update_one({'id': id}, {'$set': {'tablero': esto['tablero']}})
-    return {'id': id, 'pieza': pieza, 'original': original, 'nueva': nueva, 'tablero': esto['tablero']}
+    return {'id': id, 'pieza': pieza, 'original': original, 'nueva': nueva, 'tablero': esto.tablero, 'ganado': esto.completo}
+
+async def mandar_mensaje(id : int, mensaje : str): 
+    esto = await buscar_partida(int(id))
+    esto.mensajes.append(mensaje)
+    Partidas.replace_one({'id': int(id)}, dict(esto))

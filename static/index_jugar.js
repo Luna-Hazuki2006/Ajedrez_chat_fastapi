@@ -6,6 +6,7 @@ document.querySelector("#ws-id").textContent = client_id;
 let cambio = new Audio("https://ajedrez-chat-fastapi.onrender.com/static/audio/mover.ogg")
 // var ws = new WebSocket(`wss://ajedrez-chat-fastapi.onrender.com/ws/${client_id}`);
 var ws = new WebSocket(`ws://localhost:8000/ws/${client_id}`);
+console.log(ws);
 ws.onmessage = function(event) {
     data = JSON.parse(event.data)
     console.log(data);
@@ -66,49 +67,26 @@ function sendMessage(event) {
 function llenar_datos() {
     let verdad = false
     for (let i = 1; i <= 8; i++) {
-        // let tr = document.createElement('tr')
         for (let j = 1; j <= 8; j++) { 
             verdad = !verdad
-            // let td = document.createElement('td')
             let td = document.getElementById(i + '-' + j)
-            // td.id = i + '-' + j
             if (i == 2 || i == 7) {
-                // td.innerText = '♟'
-                // td.setAttribute('onclick', 'mover(this);')
-                // td.setAttribute('ondblclick', 'eliminar();')
                 if (i == 2) {
                     td.classList.add('blancas')
                 } else if (i == 7) {
                     td.classList.add('negras')
                 }
             } else if (i == 1 || i == 8) {
-                // if (j == 1 || j == 8) {
-                //     td.innerText = '♜'
-                // } else if (j == 2 || j == 7) {
-                //     td.innerText = '♞'
-                // } else if (j == 3 || j == 6) {
-                //     td.innerText = '♝'
-                // } else if (j == 4) {
-                //     td.innerText = '♛'
-                // } else if (j == 5) {
-                //     td.innerText = '♚'
-                // }
                 if (i == 1) {
                     td.classList.add('blancas')
                 } else if (i == 8) {
                     td.classList.add('negras')
                 }
-                // td.setAttribute('onclick', 'mover(this);')
-                // td.setAttribute('ondblclick', 'eliminar();')
-            // } else {
-            //     td.innerText = '+'
             }
             if (verdad) td.classList.add('blanca')
             else td.classList.add('negra')
-            // tr.appendChild(td)
         }
         verdad = !verdad
-        // tabla.appendChild(tr)
     }
 }
 
@@ -418,10 +396,11 @@ function movimiento(data) {
     } else if (data.classList.contains('blancas')) {
         data.classList.remove('blancas')
     }
-    if (data.innerText == '♚') {
+    if (data.innerText == '♚' || data.innerText == '♔') {
         tipo['ganado'] = true
     } else tipo['ganado'] = false
     eliminar()
+    console.log(tipo);
     ws.send(JSON.stringify(tipo))
 }
 

@@ -53,6 +53,12 @@ fieldset p {
     color: grey;
 }
 
+main {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
 .blanca {
     background-color: lightblue;
 }
