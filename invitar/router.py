@@ -52,7 +52,7 @@ async def mandar_simple(
     <p>
         Hoy has sido cordialmente invitado a nuestra aplicación 'Chajedrez' <br>
         una aplicación web para para poder jugar ajedrez multijugador con chat incluído en tiempo real. <br>
-
+        https://ajedrez-chat-fastapi.onrender.com/
     </p>
     """
     message = MessageSchema(
