@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{{ url_for('static', path='styles.css') }}">
+    <link rel="shortcut icon" href="{{ url_for('static', path='queso.ico') }}" type="image/x-icon">
+    <script src="{{ url_for('static', path='index_salas.js') }}" defer></script>
+    <title>Document</title>
+</head>
+<body>
+    <h1 id="saludos">Lista de partidas activas</h1>
+    <!-- <a href="/iniciar_sesion">
+        <button type="button">Iniciar sesión</button>
+    </a>
+    <a href="/registrar">
+        <button type="button">Registrar usuario</button>
+    </a> -->
+    <section class="arriba">
+        <details>
+            <summary>Recomerdar a un amigo (por correo)</summary>
+            <form action="/invitar" method="post">
+                <fieldset>
+                    <legend>Mandar invitación a la aplicación</legend>
+                    <label for="correo">
+                        <span>Correo electrónico: </span>
+                        <input type="email" name="correo" id="correo" required>
+                        <button type="submit">Mandar correo</button>
+                    </label>
+                </fieldset>
+            </form>
+        </details>
+        <details>
+            <summary id="cambiar">¡Asígnate un nombre personalizado para jugar!</summary>
+            <form>
+                <fieldset>
+                    <legend>Crear un nombre personalizado</legend>
+                    <label for="nombre">
+                        <span>Nombre de usuario: </span>
+                        <input type="text" name="nombre" id="nombre" required>
+                        <button type="button" onclick="personalizar();">Personalizar nombre</button>
+                    </label>
+                </fieldset>
+            </form>
+        </details>
+    </section>
+    <form action="/partidas/anonimo" method="post">
+        <button id="crear" class="crear" type="submit">Crear partida como invitado</button>
+    </form>
+    <button class="recargar" onclick="recargar();" type="button">🔄</button>
+    <dl>
+    {% for esto in lista %}
+        <dt>
+            <a href="/partidas/{{ esto['id'] }}">
+                {{ esto['creacion'] }}
+            </a>
+        </dt>
+        {% if esto['movimientos'] != [] %}
+        <dd>
+            La partida ya ha empezado
+            <br> <br>
+        </dd>
+        {% else %}
+        <dd>
+            La partida aún no ha empezado
+            <br> <br>
+        </dd>
+        {% endif %}
+    {% endfor %}
+    </dl>
+</body>
+</html>

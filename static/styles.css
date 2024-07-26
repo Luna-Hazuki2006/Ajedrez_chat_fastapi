@@ -6,6 +6,7 @@
 
 h1 {
     text-align: center;
+    font-family: cursive;
 }
 
 table {
@@ -22,12 +23,58 @@ td {
     font-size: xx-large;
 }
 
+fieldset {
+    display: grid;
+    grid-template-columns: 1;
+    margin-left: 30%;
+    margin-right: 30%;
+    border-radius: 15px;
+}
+
+fieldset legend {
+    color: grey;
+}
+
+fieldset label {
+    margin: 2%;
+    display: grid;
+    grid-template-columns: 1;
+}
+
+fieldset button {
+    background-color: crimson;
+    color: aliceblue;
+    padding: 1%;
+    margin: 2%;
+    border-radius: 5px;
+}
+
+fieldset p {
+    text-align: center;
+    color: grey;
+}
+
+main {
+    display: grid;
+    grid-template-columns: 2fr 1fr;
+}
+
+main div:last-child div {
+    max-height: 300px;
+    text-align: left;
+    overflow: scroll;
+}
+
+details {
+    cursor: pointer;
+}
+
 .blanca {
     background-color: lightblue;
 }
 
 .blancas {
-    color: white;
+    color: black;
 }
 
 .negra {
@@ -54,4 +101,47 @@ td {
 
 .oportunidad:hover {
     cursor: pointer;
+}
+
+.recargar {
+    font-size: xx-large;
+}
+
+.recargar:hover {
+    cursor: pointer;
+}
+
+.flecha {
+    font-size: xx-large;
+    border-radius: 50%;
+    background-color: brown;
+    color: blanchedalmond;
+}
+
+.comidas {
+    font-size: xx-large;
+}
+
+.arriba {
+    /* display: flex;
+    align-items: center;
+    justify-content: space-evenly; */
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+}
+
+.crear {
+    background-color: cadetblue;
+    color: aliceblue;
+    padding: 1%;
+    margin: 2%;
+    border-radius: 5px;
+}
+
+.crear:hover {
+    cursor: pointer;
+}
+
+.invisible {
+    display: none;
 }

@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Chat</title>
+        <link rel="stylesheet" href="{{ url_for('static', path='styles.css') }}">
+        <link rel="shortcut icon" href="{{ url_for('static', path='queso.ico') }}" type="image/x-icon">
+        <script src="{{ url_for('static', path='index_jugar.js') }}" defer></script>
+    </head>
+    <body>
+        <h1>Juego de ajedrez</h1>
+        <a href="/">
+            <span class="flecha">⬅</span>
+        </a>
+        <input type="hidden" name="real" id="real" value="{{ creada['id'] }}">
+        <input type="hidden" name="actualidad" id="actualidad" value="{{ creada['completo'] }}">
+        <h2>Tu ID: <span id="ws-id"></span></h2>
+        <main>
+            <table id="tablero">
+                {% for i in range(creada['tablero'].__len__()) %}
+                <tr>
+                    {% for j in range(creada['tablero'][i].__len__()) %}
+                    {% if creada['tablero'][i][j] == '' %}
+                    <td id="{{ i + 1 }}-{{ j + 1 }}">+</td>
+                    {% else %}
+                    <td id="{{ i + 1 }}-{{ j + 1 }}" onclick="mover(this);" ondblclick="eliminar();">{{ creada['tablero'][i][j] }}</td>
+                    {% endif %}
+                    {% endfor %}
+                </tr>
+                {% endfor %}
+            </table>
+            <div>
+                <div>
+                    <ul id='messages'>
+                        {% for esto in creada['mensajes'] %}
+                        <li>{{ esto }}</li>
+                        {% endfor %}
+                    </ul>
+                </div>
+                <form action="" onsubmit="sendMessage(event)">
+                    <input type="text" id="messageText" autocomplete="off"/>
+                    <button>Send</button>
+                </form>
+            </div>
+        </main>
+        <p id="comidas" class="comidas">
+            {% for esto in creada['comidas'] %}
+            {{ esto }}
+            {% endfor %}
+        </p>
+    </body>
+</html>
