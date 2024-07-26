@@ -115,7 +115,7 @@ async def websocket_endpoint(websocket: WebSocket, client_id: int):
                 valor = real['valor']
                 real['valor'] = f"Tú escribiste: {valor}" 
                 await manager.send_personal_message(json.dumps(real), websocket)
-                if real['nombre_real'] == '': 
+                if len(real['nombre_real']) == 0: 
                     real['valor'] = f"Client #{client_id} dice: {valor}"
                 else: 
                     real['valor'] = f"<{real['nombre_real']}> dice: {valor}"
