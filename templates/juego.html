@@ -14,6 +14,13 @@
         <input type="hidden" name="real" id="real" value="{{ creada['id'] }}">
         <input type="hidden" name="actualidad" id="actualidad" value="{{ creada['completo'] }}">
         <h2>Tu ID: <span id="ws-id"></span></h2>
+        <p id="comidas_blancas" class="comidas">
+            {% for esto in creada['comidas'] %}
+            {% if esto == '♟' or esto == '♛' or esto == '♚' or esto == '♜' or esto == '♞' or esto == '♝' %} 
+            {{ esto }}
+            {% endif %}
+            {% endfor %}
+        </p>
         <main>
             <table id="tablero">
                 {% for i in range(creada['tablero'].__len__()) %}
@@ -42,9 +49,11 @@
                 </form>
             </div>
         </main>
-        <p id="comidas" class="comidas">
+        <p id="comidas_negras" class="comidas">
             {% for esto in creada['comidas'] %}
+            {% if esto == '♙' or esto == '♕' or esto == '♔' or esto == '♖' or esto == '♘' or esto == '♗' %} 
             {{ esto }}
+            {% endif %}
             {% endfor %}
         </p>
     </body>

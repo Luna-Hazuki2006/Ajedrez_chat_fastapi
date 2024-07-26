@@ -2,7 +2,8 @@ var client_id = Date.now()
 let real = document.getElementById('real')
 let tabla = document.getElementById('tablero')
 let actualidad = document.getElementById('actualidad')
-let comidas = document.getElementById('comidas')
+let comidas_blancas = document.getElementById('comidas_blancas')
+let comidas_negras = document.getElementById('comidas_negras')
 let tipo = {}
 document.querySelector("#ws-id").textContent = client_id;
 let cambio = new Audio("https://ajedrez-chat-fastapi.onrender.com/static/audio/mover.ogg")
@@ -21,9 +22,7 @@ ws.onmessage = function(event) {
     } else if (data['tipo'] == 'movimiento') {
         let borrar = document.getElementById(data['original'])
         let nueva = document.getElementById(data['nuevo'])
-        if (nueva.innerText != '|' && nueva.innerText != '+') {
-            comidas.innerText += nueva.innerText
-        }
+        comer(nueva)
         if (nueva) {
             cambio.play()
             nueva.classList.remove('negras')
@@ -35,7 +34,7 @@ ws.onmessage = function(event) {
             }
             nueva.setAttribute('onclick', 'mover(this);')
             nueva.setAttribute('ondblclick', 'eliminar();')
-            borrar.innerText = '|'
+            borrar.innerText = '+'
             nueva.innerText = data['valor']
         } else {
             borrar.classList.add(data['color'])
@@ -71,6 +70,19 @@ function sendMessage(event) {
     ws.send(JSON.stringify(tipo))
     input.value = ''
     event.preventDefault()
+}
+
+function comer(nueva) {
+    if (nueva.innerText == '|' || nueva.innerText == '+') return
+    if (nueva.innerText == '♙' || nueva.innerText == '♕' || nueva.innerText == '♔' || 
+        nueva.innerText == '♖' || nueva.innerText == '♘' || nueva.innerText == '♗'
+    ) {
+        comidas_negras.innerText += nueva.innerText
+    } else if (nueva.innerText == '♟' || nueva.innerText == '♛' || nueva.innerText == '♚' || 
+                nueva.innerText == '♜' || nueva.innerText == '♞' || nueva.innerText == '♝'
+    ) {
+        comidas_blancas.innerText += nueva.innerText
+    }
 }
 
 function llenar_datos() {
