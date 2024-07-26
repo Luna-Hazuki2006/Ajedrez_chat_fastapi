@@ -8,9 +8,24 @@
     </head>
     <body>
         <h1>Juego de ajedrez</h1>
-        <a href="/">
-            <span class="flecha">⬅</span>
-        </a>
+        <div class="invitaciones">
+            <a href="/">
+                <span class="flecha">⬅</span>
+            </a>
+            <details>
+                <summary>Invitar a un amigo a jugar (por correo)</summary>
+                <form action="/invitar/{{ creada['id'] }}" method="post">
+                    <fieldset>
+                        <legend>Mandar invitación a la partida</legend>
+                        <label for="correo">
+                            <span>Correo electrónico: </span>
+                            <input type="email" name="correo" id="correo" required>
+                            <button type="submit">Mandar correo</button>
+                        </label>
+                    </fieldset>
+                </form>
+            </details>
+        </div>
         <input type="hidden" name="real" id="real" value="{{ creada['id'] }}">
         <input type="hidden" name="actualidad" id="actualidad" value="{{ creada['completo'] }}">
         <h2>Tu ID: <span id="ws-id"></span></h2>

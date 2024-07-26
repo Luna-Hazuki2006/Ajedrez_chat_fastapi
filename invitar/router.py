@@ -66,3 +66,33 @@ async def mandar_simple(
     await fm.send_message(message)
     # return JSONResponse(status_code=200, content={"message": "email has been sent"})
     return RedirectResponse(url='/', status_code=status.HTTP_303_SEE_OTHER)
+
+@router.post("/{id}")
+async def mandar_invitacion(
+        request: Request, 
+        id: int,  
+        correo: EmailStr = Form(...)):
+    emailFinal = EmailSchema(
+        email= [
+            correo
+        ]
+    )
+    html = f"""
+    <h1>Invitación cordial a jugar una partida en Chajedrez</h1>
+    <p>
+        Hoy has sido cordialmente invitado a jugar en nuestra aplicación 'Chajedrez' <br>
+        ¿Quién ganará? Solo hay una forma de saberlo ¡Jugar! <br>
+        https://ajedrez-chat-fastapi.onrender.com/partidas/{id}
+    </p>
+    """
+    message = MessageSchema(
+        subject="Invitación cordial a Chajedrez",
+        recipients=emailFinal.model_dump().get('email'),
+        body=html,
+        subtype=MessageType.html)
+
+    fm = FastMail(conf)
+    print("Fast mail: ", fm)
+    await fm.send_message(message)
+    # return JSONResponse(status_code=200, content={"message": "email has been sent"})
+    return RedirectResponse(url=f'/partidas/{id}', status_code=status.HTTP_303_SEE_OTHER)
