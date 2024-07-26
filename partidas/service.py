@@ -20,7 +20,7 @@ async def buscar_partida(id : int):
                    creacion=esto['creacion'],  
                    participantes=esto['participantes'], 
                    jugadores=esto['jugadores'], 
-                   movimiento=esto['movimientos'], 
+                   movimientos=esto['movimientos'], 
                    mensajes=esto['mensajes'], 
                    comidas=esto['comidas'], 
                    tablero=esto['tablero'], 
@@ -37,7 +37,6 @@ async def mover_pieza(id : int, pieza : str, original : str, nueva : str):
     nueva_original = [int(nueva_original[0]) - 1, int(nueva_original[1]) - 1]
     nueva_nueva = nueva.split('-')
     nueva_nueva = [int(nueva_nueva[0]) - 1, int(nueva_nueva[1]) - 1]
-    print('****************************************************************')
     esto.tablero[nueva_original[0]][nueva_original[1]] = '' 
     if esto.tablero[nueva_nueva[0]][nueva_nueva[1]] != '': 
         esto.comidas.append(esto.tablero[nueva_nueva[0]][nueva_nueva[1]])
@@ -45,9 +44,9 @@ async def mover_pieza(id : int, pieza : str, original : str, nueva : str):
             esto.tablero[nueva_nueva[0]][nueva_nueva[1]] == '♚'):
             esto.completo = True
     esto.tablero[nueva_nueva[0]][nueva_nueva[1]] = pieza
-    esto.movimientos.append({'pieza': pieza, 'inicio': original, 'final': nueva})
+    tamaño = len(esto.movimientos)
+    esto.movimientos.insert(tamaño + 1, f'({pieza}){original}/{nueva}')
     Partidas.replace_one({'id': int(id)}, dict(esto))
-    print(esto)
     return {'id': id, 'pieza': pieza, 'original': original, 'nueva': nueva, 'tablero': esto.tablero, 'ganado': esto.completo}
 
 async def mandar_mensaje(id : int, mensaje : str): 

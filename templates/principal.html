@@ -27,19 +27,14 @@
                 {{ esto['creacion'] }}
             </a>
         </dt>
-        {% if esto['participantes'] != None %}
+        {% if esto['movimientos'] != [] %}
         <dd>
-            La sala tiene {{ esto['participantes'].__len__() }} participantes 
-            {% if esto['completo'] %}
-            y dos de ellos ya jugando
-            {% else %}
-            y aún no ha empezado la partida
-            {% endif %}
+            La partida ya ha empezado
             <br> <br>
         </dd>
         {% else %}
         <dd>
-            La sala está vacía 
+            La partida aún no ha empezado
             <br> <br>
         </dd>
         {% endif %}

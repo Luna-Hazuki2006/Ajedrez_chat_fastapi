@@ -1,6 +1,8 @@
 var client_id = Date.now()
 let real = document.getElementById('real')
 let tabla = document.getElementById('tablero')
+let actualidad = document.getElementById('actualidad')
+let comidas = document.getElementById('comidas')
 let tipo = {}
 document.querySelector("#ws-id").textContent = client_id;
 let cambio = new Audio("https://ajedrez-chat-fastapi.onrender.com/static/audio/mover.ogg")
@@ -19,6 +21,9 @@ ws.onmessage = function(event) {
     } else if (data['tipo'] == 'movimiento') {
         let borrar = document.getElementById(data['original'])
         let nueva = document.getElementById(data['nuevo'])
+        if (nueva.innerText != '|' && nueva.innerText != '+') {
+            comidas.innerText += nueva.innerText
+        }
         if (nueva) {
             cambio.play()
             nueva.classList.remove('negras')
@@ -88,6 +93,9 @@ function llenar_datos() {
         }
         verdad = !verdad
     }
+    if (actualidad.value === 'True') {
+        pausar()
+    }
 }
 
 function eliminar() {
@@ -102,12 +110,58 @@ function eliminar() {
     recordar()
 }
 
+function reasignar(esto) {
+    esto.classList.remove('negras')
+    esto.classList.remove('blancas')
+    switch (esto.innerText) {
+        case '♝':
+            esto.classList.add('negras')
+            break;
+        case '♗': 
+            esto.classList.add('blancas')
+            break;
+        case '♞':
+            esto.classList.add('negras')
+            break;
+        case '♘': 
+            esto.classList.add('blancas')
+            break;
+        case '♜':
+            esto.classList.add('negras')
+            break;
+        case '♖': 
+            esto.classList.add('blancas')
+            break; 
+        case '♟':
+            esto.classList.add('negras')
+            break;
+        case '♙': 
+            esto.classList.add('blancas')
+            break; 
+        case '♛':
+            esto.classList.add('negras')
+            break;
+        case '♕': 
+            esto.classList.add('blancas')
+            break; 
+        case '♚':
+            esto.classList.add('negras')
+            break;
+        case '♔': 
+            esto.classList.add('blancas')
+            break; 
+        default:
+            break;
+    }
+}
+
 function recordar() {
     let todos = document.getElementsByTagName('td')
     for (const esto of todos) {
         if (esto.innerText != '|' && esto.innerText != '+') {
             esto.setAttribute('onclick', 'mover(this);')
             esto.setAttribute('ondblclick', 'eliminar();')
+            reasignar(esto)
         }
     }
 }
@@ -118,6 +172,7 @@ function pausar() {
         if (esto.innerText != '|' && esto.innerText != '+') {
             esto.removeAttribute('onclick')
             esto.removeAttribute('ondblclick')
+            reasignar(esto)
         } else {
             esto.removeAttribute('onclick')
         }
@@ -139,7 +194,7 @@ function dar_clickeo(nuevo) {
 }
 
 function movimiento_peon(ubicacion, data) {
-    if (ubicacion[0] == 2 && tipo['color'] == 'blancas') {
+    if (ubicacion[0] == 2 && data.innerText == '♙') {
         let posibilidad = document.getElementById(Number(ubicacion[0]) + 1 + '-' + ubicacion[1])
         if (posibilidad && !posibilidad?.classList.contains('blancas') && !posibilidad?.classList.contains('negras')) {
             dar_clickeo(posibilidad)
@@ -156,7 +211,7 @@ function movimiento_peon(ubicacion, data) {
         if (posibilidad?.classList.contains('negras')) {
             dar_clickeo(posibilidad)
         }
-    } else if (ubicacion[0] == 7 && tipo['color'] == 'negras') {
+    } else if (ubicacion[0] == 7 && data.innerText == '♟') {
         let posibilidad = document.getElementById(Number(ubicacion[0]) - 1 + '-' + ubicacion[1])
         if (posibilidad && !posibilidad?.classList.contains('blancas') && !posibilidad?.classList.contains('negras')) {
             dar_clickeo(posibilidad)
@@ -174,9 +229,9 @@ function movimiento_peon(ubicacion, data) {
             dar_clickeo(posibilidad)
         }
     } else {
-        if (data.classList.contains('blancas')) {
+        if (data.innerText == '♙') {
             let posibilidad = document.getElementById(Number(ubicacion[0]) + 1 + '-' + ubicacion[1])
-            if (posibilidad && !posibilidad?.classList.contains('blancas') && !posibilidad?.classList.contains('negras')) {
+            if (posibilidad && (posibilidad?.innerText == '|' || posibilidad?.innerText == '+')) {
                 dar_clickeo(posibilidad)
             } 
             posibilidad = document.getElementById((Number(ubicacion[0]) + 1) + '-' + (Number(ubicacion[1]) + 1))
@@ -189,9 +244,9 @@ function movimiento_peon(ubicacion, data) {
             if (posibilidad?.classList.contains('negras')) {
                 dar_clickeo(posibilidad)
             }
-        } else if (data.classList.contains('negras')) {
+        } else if (data.innerText == '♟') {
             let posibilidad = document.getElementById(Number(ubicacion[0]) - 1 + '-' + ubicacion[1])
-            if (posibilidad && !posibilidad?.classList.contains('blancas') && !posibilidad?.classList.contains('negras')) {
+            if (posibilidad && (posibilidad?.innerText == '|' || posibilidad?.innerText == '+')) {
                 dar_clickeo(posibilidad)
             }
             posibilidad = document.getElementById((Number(ubicacion[0]) - 1) + '-' + (Number(ubicacion[1]) + 1))

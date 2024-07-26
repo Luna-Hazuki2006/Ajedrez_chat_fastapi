@@ -7,7 +7,10 @@
         <script src="{{ url_for('static', path='index_jugar.js') }}" defer></script>
     </head>
     <body>
-        <h1>WebSocket Chat</h1>
+        <h1>Juego de ajedrez</h1>
+        <a href="/">
+            <span class="flecha">⬅</span>
+        </a>
         <input type="hidden" name="real" id="real" value="{{ creada['id'] }}">
         <input type="hidden" name="actualidad" id="actualidad" value="{{ creada['completo'] }}">
         <h2>Your ID: <span id="ws-id"></span></h2>
@@ -26,16 +29,23 @@
                 {% endfor %}
             </table>
             <div>
-                <ul id='messages'>
-                    {% for esto in creada['mensajes'] %}
-                    <li>{{ esto }}</li>
-                    {% endfor %}
-                </ul>
+                <div>
+                    <ul id='messages'>
+                        {% for esto in creada['mensajes'] %}
+                        <li>{{ esto }}</li>
+                        {% endfor %}
+                    </ul>
+                </div>
                 <form action="" onsubmit="sendMessage(event)">
                     <input type="text" id="messageText" autocomplete="off"/>
                     <button>Send</button>
                 </form>
             </div>
         </main>
+        <p id="comidas" class="comidas">
+            {% for esto in creada['comidas'] %}
+            {{ esto }}
+            {% endfor %}
+        </p>
     </body>
 </html>
