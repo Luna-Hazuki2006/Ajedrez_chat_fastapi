@@ -41,8 +41,7 @@ router = APIRouter()
 @router.post("")
 async def mandar_simple(
         request: Request, 
-        correo: EmailStr = Form(...), 
-        info=Depends(auth_handler.auth_wrapper)):
+        correo: EmailStr = Form(...)):
     emailFinal = EmailSchema(
         email= [
             correo
