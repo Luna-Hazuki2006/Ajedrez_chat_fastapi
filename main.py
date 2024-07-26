@@ -7,6 +7,7 @@ from posibilidades import router as posibilidades
 from piezas import router as piezas
 from partidas import router as partidas
 from usuarios import router as usuarios
+from invitar import router as invitar
 from usuarios.exceptions import LoginExpired, RequiresLoginException
 import json
 import time
@@ -21,6 +22,7 @@ app.include_router(posibilidades.router, prefix='/posibilidades', tags=['Posibil
 app.include_router(piezas.router, prefix='/piezas', tags=['Piezas'])
 app.include_router(partidas.router, prefix='/partidas', tags=['Partidas'])
 app.include_router(usuarios.router, tags=['usuarios'])
+app.include_router(invitar.router, prefix='/invitar', tags=['invitar'])
 
 class ConnectionManager:
     def __init__(self):
@@ -111,9 +113,12 @@ async def websocket_endpoint(websocket: WebSocket, client_id: int):
             real = json.loads(data)
             if real['tipo'] == 'mensaje': 
                 valor = real['valor']
-                real['valor'] = f"You wrote: {valor}"
+                real['valor'] = f"Tú escribiste: {valor}" 
                 await manager.send_personal_message(json.dumps(real), websocket)
-                real['valor'] = f"Client #{client_id} says: {valor}"
+                if real['nombre_real'] == '': 
+                    real['valor'] = f"Client #{client_id} dice: {valor}"
+                else: 
+                    real['valor'] = f"<{real['nombre_real']}> dice: {valor}"
                 await partidas.servicio.mandar_mensaje(id=real['id'], mensaje=real['valor'])
                 await manager.broadcast(json.dumps(real))
             if real['tipo'] == 'movimiento': 

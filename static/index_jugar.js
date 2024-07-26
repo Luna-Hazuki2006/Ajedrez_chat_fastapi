@@ -63,13 +63,24 @@ function sendMessage(event) {
         'tipo': 'mensaje', 
         'valor': input.value, 
         'id': real.value
-    }
+    } 
+    if (localStorage.getItem('nombre_personal')) {
+        let nombre = localStorage.getItem('nombre_personal')
+        tipo['nombre_real'] = nombre
+    } else tipo['nombre_real'] = ''
     ws.send(JSON.stringify(tipo))
     input.value = ''
     event.preventDefault()
 }
 
 function llenar_datos() {
+    if (localStorage.getItem('nombre_personal')) {
+        let nombre = localStorage.getItem('nombre_personal')
+        let id = document.getElementById('ws-id')
+        id.classList.add('invisible')
+        let mayor = id.parentElement
+        mayor.innerText = '¿Listo para jugar ' + nombre + '?'
+    }
     let verdad = false
     for (let i = 1; i <= 8; i++) {
         for (let j = 1; j <= 8; j++) { 
@@ -456,6 +467,10 @@ function movimiento(data) {
     } else tipo['ganado'] = false
     eliminar()
     console.log(tipo);
+    if (localStorage.getItem('nombre_personal')) {
+        let nombre = localStorage.getItem('nombre_personal')
+        tipo['nombre_real'] = nombre
+    } else tipo['nombre_real'] = ''
     ws.send(JSON.stringify(tipo))
 }
 

@@ -31,7 +31,6 @@ async def Borrar_Partida(id : int):
     Partidas.delete_one({'id': id})
 
 async def mover_pieza(id : int, pieza : str, original : str, nueva : str): 
-    print(id)
     esto = await buscar_partida(int(id))
     nueva_original = original.split('-')
     nueva_original = [int(nueva_original[0]) - 1, int(nueva_original[1]) - 1]

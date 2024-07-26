@@ -9,7 +9,7 @@ class Partida(BaseModel):
     jugadores: list = []
     mensajes: list[str] = []
     comidas: list[str] = []
-    movimientos: list = []
+    movimientos: list[str] = []
     tablero: list[list]
     estado: str
     completo: bool

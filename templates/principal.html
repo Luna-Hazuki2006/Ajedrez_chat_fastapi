@@ -9,15 +9,43 @@
     <title>Document</title>
 </head>
 <body>
-    <h1>Lista de partidas activas</h1>
-    <a href="/iniciar_sesion">
+    <h1 id="saludos">Lista de partidas activas</h1>
+    <!-- <a href="/iniciar_sesion">
         <button type="button">Iniciar sesión</button>
     </a>
     <a href="/registrar">
         <button type="button">Registrar usuario</button>
-    </a>
+    </a> -->
+    <section class="arriba">
+        <details>
+            <summary>Recomerdar a un amigo (por correo)</summary>
+            <form action="/invitar" method="post">
+                <fieldset>
+                    <legend>Mandar invitación a la aplicación</legend>
+                    <label for="correo">
+                        <span>Correo electrónico: </span>
+                        <input type="email" name="correo" id="correo" required>
+                        <button type="submit">Mandar correo</button>
+                    </label>
+                </fieldset>
+            </form>
+        </details>
+        <details>
+            <summary id="cambiar">¡Asígnate un nombre personalizado para jugar!</summary>
+            <form>
+                <fieldset>
+                    <legend>Crear un nombre personalizado</legend>
+                    <label for="nombre">
+                        <span>Nombre de usuario: </span>
+                        <input type="text" name="nombre" id="nombre" required>
+                        <button type="button" onclick="personalizar();">Personalizar nombre</button>
+                    </label>
+                </fieldset>
+            </form>
+        </details>
+    </section>
     <form action="/partidas/anonimo" method="post">
-        <button type="submit">Crear partida como invitado</button>
+        <button id="crear" class="crear" type="submit">Crear partida como invitado</button>
     </form>
     <button class="recargar" onclick="recargar();" type="button">🔄</button>
     <dl>
