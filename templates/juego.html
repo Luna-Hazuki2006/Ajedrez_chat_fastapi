@@ -28,6 +28,7 @@
         </div>
         <input type="hidden" name="real" id="real" value="{{ creada['id'] }}">
         <input type="hidden" name="actualidad" id="actualidad" value="{{ creada['completo'] }}">
+        <input type="hidden" name="poder" id="poder" value="{{ creada['turno'] }}">
         <h2>Tu ID: <span id="ws-id"></span></h2>
         <p id="comidas_blancas" class="comidas">
             {% for esto in creada['comidas'] %}
@@ -44,7 +45,7 @@
                     {% if creada['tablero'][i][j] == '' %}
                     <td id="{{ i + 1 }}-{{ j + 1 }}">+</td>
                     {% else %}
-                    <td id="{{ i + 1 }}-{{ j + 1 }}" onclick="mover(this);" ondblclick="eliminar();">{{ creada['tablero'][i][j] }}</td>
+                    <td id="{{ i + 1 }}-{{ j + 1 }}">{{ creada['tablero'][i][j] }}</td>
                     {% endif %}
                     {% endfor %}
                 </tr>

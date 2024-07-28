@@ -25,7 +25,8 @@ async def obtener_partida(request : Request, id : int):
 @router.post('/anonimo')
 async def crear_partida(request : Request): 
     hoy = datetime.today()
-    partida = Partida(id=0, creacion=hoy, estado='creado', completo=False, 
+    partida = Partida(id=0, creacion=hoy, estado='creado', 
+                      completo=False, turno='blancas', 
                       tablero=[
                           ['♖', '♘', '♗', '♕', '♔', '♗', '♘', '♖'], 
                           ['♙', '♙', '♙', '♙', '♙', '♙', '♙', '♙'], 
@@ -43,7 +44,7 @@ async def crear_partida(request : Request):
     })
 
 @router.put('/{id}')
-async def modificar_partida(id : int, parida : Partida): 
+async def modificar_partida(id : int, partida : Partida): 
     return []
 
 @router.delete('/{id}')

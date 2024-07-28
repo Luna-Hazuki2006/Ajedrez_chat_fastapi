@@ -4,6 +4,7 @@ let tabla = document.getElementById('tablero')
 let actualidad = document.getElementById('actualidad')
 let comidas_blancas = document.getElementById('comidas_blancas')
 let comidas_negras = document.getElementById('comidas_negras')
+let poder = document.getElementById('poder')
 let tipo = {}
 document.querySelector("#ws-id").textContent = client_id;
 let cambio = new Audio("https://ajedrez-chat-fastapi.onrender.com/static/audio/mover.ogg")
@@ -22,7 +23,11 @@ ws.onmessage = function(event) {
     } else if (data['tipo'] == 'movimiento') {
         let borrar = document.getElementById(data['original'])
         let nueva = document.getElementById(data['nuevo'])
+        if (data['turno'] == 'blancas') poder.value = 'negras'
+        else if (data['turno'] == 'negras') poder.value = 'blancas'
         comer(nueva)
+        pausar()
+        recordar()
         if (nueva) {
             cambio.play()
             nueva.classList.remove('negras')
@@ -32,8 +37,6 @@ ws.onmessage = function(event) {
             } else if (data['color'] == 'blancas') {
                 nueva.classList.add('blancas')
             }
-            nueva.setAttribute('onclick', 'mover(this);')
-            nueva.setAttribute('ondblclick', 'eliminar();')
             borrar.innerText = '+'
             nueva.innerText = data['valor']
         } else {
@@ -156,6 +159,7 @@ function llenar_datos() {
         pausar()
     }
     confirmar()
+    recordar()
 }
 
 function eliminar() {
@@ -217,11 +221,14 @@ function reasignar(esto) {
 
 function recordar() {
     let todos = document.getElementsByTagName('td')
+    let turno = poder.value
     for (const esto of todos) {
         if (esto.innerText != '|' && esto.innerText != '+') {
-            esto.setAttribute('onclick', 'mover(this);')
-            esto.setAttribute('ondblclick', 'eliminar();')
-            reasignar(esto)
+            if (esto.classList.contains(turno)) {
+                esto.setAttribute('onclick', 'mover(this);')
+                esto.setAttribute('ondblclick', 'eliminar();')
+                reasignar(esto)
+            }
         }
     }
 }
@@ -515,6 +522,7 @@ function movimiento(data) {
     original.classList.remove('negras', 'blancas')
     tipo['nuevo'] = data.id
     tipo['usuario'] = client_id
+    tipo['turno'] = poder.value
     if (data.classList.contains('negras')) {
         data.classList.remove('negras')
     } else if (data.classList.contains('blancas')) {
