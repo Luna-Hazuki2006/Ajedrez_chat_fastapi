@@ -7,8 +7,8 @@ let comidas_negras = document.getElementById('comidas_negras')
 let tipo = {}
 document.querySelector("#ws-id").textContent = client_id;
 let cambio = new Audio("https://ajedrez-chat-fastapi.onrender.com/static/audio/mover.ogg")
-var ws = new WebSocket(`wss://ajedrez-chat-fastapi.onrender.com/ws/${client_id}`);
-// var ws = new WebSocket(`ws://localhost:8000/ws/${client_id}`);
+// var ws = new WebSocket(`wss://ajedrez-chat-fastapi.onrender.com/ws/${client_id}`);
+var ws = new WebSocket(`ws://localhost:8000/ws/${client_id}`);
 console.log(ws);
 ws.onmessage = function(event) {
     data = JSON.parse(event.data)
@@ -54,6 +54,8 @@ ws.onmessage = function(event) {
             message.appendChild(content)
             messages.appendChild(message)   
         }
+        console.log(nueva);
+        confirmar()
     }
 };
 function sendMessage(event) {
@@ -70,6 +72,40 @@ function sendMessage(event) {
     ws.send(JSON.stringify(tipo))
     input.value = ''
     event.preventDefault()
+}
+
+function confirmar() {
+    console.log('confirmar');
+    let lista = document.getElementsByTagName('td')
+    if (lista) {
+        for (const esto of lista) {
+            reasignar(esto)
+            esto.classList.remove('jaque')
+        }
+    }
+    lista = document.getElementsByTagName('td')
+    conseguir(lista)
+}
+
+function conseguir(lista) {
+    for (const esto of lista) {
+        let ubicacion = esto.id.split('-')
+        if (esto.innerText == '+') {
+            continue
+        }
+        if (esto.innerText == '♟' || esto.innerText == '♙') {
+            movimiento_peon(ubicacion, esto, true)
+        } else if (esto.innerText == '♕' || esto.innerText == '♛') {
+            movimiento_alfil(ubicacion, true)
+            movimiento_torre(ubicacion, true)
+        } else if (esto.innerText == '♖' || esto.innerText == '♜') {
+            movimiento_torre(ubicacion, true)
+        } else if (esto.innerText == '♘' || esto.innerText == '♞') {
+            movimiento_caballo(ubicacion, true)
+        } else if (esto.innerText == '♗' || esto.innerText == '♝') {
+            movimiento_alfil(ubicacion, true)
+        }
+    }
 }
 
 function comer(nueva) {
@@ -119,6 +155,7 @@ function llenar_datos() {
     if (actualidad.value === 'True') {
         pausar()
     }
+    confirmar()
 }
 
 function eliminar() {
@@ -202,13 +239,22 @@ function pausar() {
     }
 }
 
-function dar_clickeo(nuevo) {
-    if (nuevo.classList.contains(tipo['color']) && nuevo.innerText != '|' && nuevo.innerText != '+') {
+function dar_clickeo(nuevo, ubicacion, prueba = false) { 
+    console.log(prueba);
+    let este = document.getElementById(ubicacion[0] + '-' + ubicacion[1])
+    let color = (este.classList.contains('negras')) ? 'negras' : 'blancas'
+    if (nuevo.classList.contains(color) && nuevo.innerText != '+' || este.innerText == '+') {
         return false
     } 
-    nuevo.classList.add('oportunidad')
-    nuevo.setAttribute('onclick', 'movimiento(this);')
-    nuevo.removeAttribute('ondblclick')
+    if (prueba) {
+        if (nuevo.innerText == '♚' || nuevo.innerText == '♔') {
+            nuevo.classList.add('jaque')
+        }
+    } else {
+        nuevo.classList.add('oportunidad')
+        nuevo.setAttribute('onclick', 'movimiento(this);')
+        nuevo.removeAttribute('ondblclick')
+    }
     if ((nuevo.classList.contains('blancas') || nuevo.classList.contains('negras')) && 
         (nuevo.innerText != '+' && nuevo.innerText != '|')) {
         return false
@@ -216,77 +262,77 @@ function dar_clickeo(nuevo) {
     return true
 }
 
-function movimiento_peon(ubicacion, data) {
+function movimiento_peon(ubicacion, data, prueba = false) {
     if (ubicacion[0] == 2 && data.innerText == '♙') {
         let posibilidad = document.getElementById(Number(ubicacion[0]) + 1 + '-' + ubicacion[1])
         if (posibilidad && !posibilidad?.classList.contains('blancas') && !posibilidad?.classList.contains('negras')) {
-            dar_clickeo(posibilidad)
+            dar_clickeo(posibilidad, ubicacion, prueba)
             posibilidad = document.getElementById(Number(ubicacion[0]) + 2 + '-' + ubicacion[1])
             if (posibilidad && !posibilidad?.classList.contains('blancas') && !posibilidad?.classList.contains('negras')) {
-                dar_clickeo(posibilidad)
+                dar_clickeo(posibilidad, ubicacion, prueba)
             } 
         } 
         posibilidad = document.getElementById((Number(ubicacion[0]) + 1) + '-' + (Number(ubicacion[1]) + 1))
         if (posibilidad?.classList.contains('negras')) {
-            dar_clickeo(posibilidad)
+            dar_clickeo(posibilidad, ubicacion, prueba)
         }
         posibilidad = document.getElementById((Number(ubicacion[0]) + 1) + '-' + (Number(ubicacion[1]) - 1))
         if (posibilidad?.classList.contains('negras')) {
-            dar_clickeo(posibilidad)
+            dar_clickeo(posibilidad, ubicacion, prueba)
         }
     } else if (ubicacion[0] == 7 && data.innerText == '♟') {
         let posibilidad = document.getElementById(Number(ubicacion[0]) - 1 + '-' + ubicacion[1])
         if (posibilidad && !posibilidad?.classList.contains('blancas') && !posibilidad?.classList.contains('negras')) {
-            dar_clickeo(posibilidad)
+            dar_clickeo(posibilidad, ubicacion, prueba)
             posibilidad = document.getElementById(Number(ubicacion[0]) - 2 + '-' + ubicacion[1])
             if (posibilidad && !posibilidad?.classList.contains('blancas') && !posibilidad?.classList.contains('negras')) {
-                dar_clickeo(posibilidad)
+                dar_clickeo(posibilidad, ubicacion, prueba)
             }
         }
         posibilidad = document.getElementById((Number(ubicacion[0])) - 1 + '-' + (Number(ubicacion[1]) + 1))
         if (posibilidad?.classList.contains('blancas')) {
-            dar_clickeo(posibilidad)
+            dar_clickeo(posibilidad, ubicacion, prueba)
         }
         posibilidad = document.getElementById((Number(ubicacion[0]) - 1) + '-' + (Number(ubicacion[1]) - 1))
         if (posibilidad?.classList.contains('blancas')) {
-            dar_clickeo(posibilidad)
+            dar_clickeo(posibilidad, ubicacion, prueba)
         }
     } else {
         if (data.innerText == '♙') {
             let posibilidad = document.getElementById(Number(ubicacion[0]) + 1 + '-' + ubicacion[1])
             if (posibilidad && (posibilidad?.innerText == '|' || posibilidad?.innerText == '+')) {
-                dar_clickeo(posibilidad)
+                dar_clickeo(posibilidad, ubicacion, prueba)
             } 
             posibilidad = document.getElementById((Number(ubicacion[0]) + 1) + '-' + (Number(ubicacion[1]) + 1))
 
             if (posibilidad?.classList.contains('negras')) {
-                dar_clickeo(posibilidad)
+                dar_clickeo(posibilidad, ubicacion, prueba)
             }
             posibilidad = document.getElementById((Number(ubicacion[0]) + 1) + '-' + (Number(ubicacion[1]) - 1))
 
             if (posibilidad?.classList.contains('negras')) {
-                dar_clickeo(posibilidad)
+                dar_clickeo(posibilidad, ubicacion, prueba)
             }
         } else if (data.innerText == '♟') {
             let posibilidad = document.getElementById(Number(ubicacion[0]) - 1 + '-' + ubicacion[1])
             if (posibilidad && (posibilidad?.innerText == '|' || posibilidad?.innerText == '+')) {
-                dar_clickeo(posibilidad)
+                dar_clickeo(posibilidad, ubicacion, prueba)
             }
             posibilidad = document.getElementById((Number(ubicacion[0]) - 1) + '-' + (Number(ubicacion[1]) + 1))
 
             if (posibilidad?.classList.contains('blancas')) {
-                dar_clickeo(posibilidad)
+                dar_clickeo(posibilidad, ubicacion, prueba)
             }
             posibilidad = document.getElementById((Number(ubicacion[0]) - 1) + '-' + (Number(ubicacion[1]) - 1))
 
             if (posibilidad?.classList.contains('blancas')) {
-                dar_clickeo(posibilidad)
+                dar_clickeo(posibilidad, ubicacion, prueba)
             }
         }
     }
 }
 
-function movimiento_torre(ubicacion) {
+function movimiento_torre(ubicacion, prueba = false) {
     let cuatro = []
     let i = ubicacion[0]
     do {
@@ -294,7 +340,7 @@ function movimiento_torre(ubicacion) {
         let nuevo = i + '-' + ubicacion[1]
         let este = document.getElementById(nuevo)
         if (este) {
-            if (!dar_clickeo(este)) break
+            if (!dar_clickeo(este, ubicacion, prueba)) break
         } else break
     } while (i < 8);
     i = ubicacion[1]
@@ -303,7 +349,7 @@ function movimiento_torre(ubicacion) {
         let nuevo = ubicacion[0] + '-' + i
         let este = document.getElementById(nuevo)
         if (este) {
-            if (!dar_clickeo(este)) break
+            if (!dar_clickeo(este, ubicacion, prueba)) break
         } else break
     } while (i < 8);
     i = ubicacion[0]
@@ -312,7 +358,7 @@ function movimiento_torre(ubicacion) {
         let nuevo = i + '-' + ubicacion[1]
         let este = document.getElementById(nuevo)
         if (este) {
-            if (!dar_clickeo(este)) break
+            if (!dar_clickeo(este, ubicacion, prueba)) break
         } else break
     } while (i > 1);
     i = ubicacion[1]
@@ -321,19 +367,19 @@ function movimiento_torre(ubicacion) {
         let nuevo = ubicacion[0] + '-' + i
         let este = document.getElementById(nuevo)
         if (este) {
-            if (!dar_clickeo(este)) break
+            if (!dar_clickeo(este, ubicacion, prueba)) break
         } else break
     } while (i > 1);
 }
 
-function movimiento_alfil(ubicacion) {
+function movimiento_alfil(ubicacion, prueba = false) {
     let nuevo = 0
     do {
         nuevo++
         let lugar = (Number(ubicacion[0]) + nuevo) + '-' + (Number(ubicacion[1]) + nuevo)
         let este = document.getElementById(lugar)
         if (este) {
-            if (!dar_clickeo(este)) break
+            if (!dar_clickeo(este, ubicacion, prueba)) break
         } else break
     } while (true);
     nuevo = 0
@@ -342,7 +388,7 @@ function movimiento_alfil(ubicacion) {
         let lugar = (Number(ubicacion[0]) - nuevo) + '-' + (Number(ubicacion[1]) - nuevo)
         let este = document.getElementById(lugar)
         if (este) {
-            if (!dar_clickeo(este)) break
+            if (!dar_clickeo(este, ubicacion, prueba)) break
         } else break
     } while (true);
     nuevo = 0
@@ -351,7 +397,7 @@ function movimiento_alfil(ubicacion) {
         let lugar = (Number(ubicacion[0]) - nuevo) + '-' + (Number(ubicacion[1]) + nuevo)
         let este = document.getElementById(lugar)
         if (este) {
-            if (!dar_clickeo(este)) break
+            if (!dar_clickeo(este, ubicacion, prueba)) break
         } else break
     } while (true);
     nuevo = 0
@@ -360,12 +406,12 @@ function movimiento_alfil(ubicacion) {
         let lugar = (Number(ubicacion[0]) + nuevo) + '-' + (Number(ubicacion[1]) - nuevo)
         let este = document.getElementById(lugar)
         if (este) {
-            if (!dar_clickeo(este)) break
+            if (!dar_clickeo(este, ubicacion, prueba)) break
         } else break
     } while (true);
 }
 
-function movimiento_caballo(ubicacion) {
+function movimiento_caballo(ubicacion, prueba = false) {
     let Ele = []
     Ele.push((Number(ubicacion[0]) + 2) + '-' + (Number(ubicacion[1]) + 1))
     Ele.push((Number(ubicacion[0]) + 2) + '-' + (Number(ubicacion[1]) - 1))
@@ -378,28 +424,28 @@ function movimiento_caballo(ubicacion) {
     for (const nuevo of Ele) {
         let este = document.getElementById(nuevo)
         if (este) {
-            if (!dar_clickeo(este)) continue
+            if (!dar_clickeo(este, ubicacion, prueba)) continue
         }
     }
 }
 
-function movimiento_rey(ubicacion) {
+function movimiento_rey(ubicacion, prueba = false) {
     let este = document.getElementById((Number(ubicacion[0]) + 1) + '-' + ubicacion[1])
-    if (este) dar_clickeo(este)
+    if (este) dar_clickeo(este, ubicacion, prueba)
     este = document.getElementById((Number(ubicacion[0]) - 1) + '-' + ubicacion[1])
-    if (este) dar_clickeo(este)
+    if (este) dar_clickeo(este, ubicacion, prueba)
     este = document.getElementById((Number(ubicacion[0]) + 1) + '-' + (Number(ubicacion[1]) + 1))
-    if (este) dar_clickeo(este)
+    if (este) dar_clickeo(este, ubicacion, prueba)
     este = document.getElementById((Number(ubicacion[0]) + 1) + '-' + (Number(ubicacion[1]) - 1))
-    if (este) dar_clickeo(este)
+    if (este) dar_clickeo(este, ubicacion, prueba)
     este = document.getElementById((Number(ubicacion[0]) - 1) + '-' + (Number(ubicacion[1]) + 1))
-    if (este) dar_clickeo(este)
+    if (este) dar_clickeo(este, ubicacion, prueba)
     este = document.getElementById((Number(ubicacion[0]) - 1) + '-' + (Number(ubicacion[1]) - 1))
-    if (este) dar_clickeo(este)
+    if (este) dar_clickeo(este, ubicacion, prueba)
     este = document.getElementById(ubicacion[0] + '-' + (Number(ubicacion[1]) + 1))
-    if (este) dar_clickeo(este)
+    if (este) dar_clickeo(este, ubicacion, prueba)
     este = document.getElementById(ubicacion[0] + '-' + (Number(ubicacion[1]) - 1))
-    if (este) dar_clickeo(este)
+    if (este) dar_clickeo(este, ubicacion, prueba)
 }
 
 function mover(data) {
