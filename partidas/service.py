@@ -51,6 +51,21 @@ async def mover_pieza(id : int, pieza : str, original : str, nueva : str):
     Partidas.replace_one({'id': int(id)}, dict(esto))
     return esto.turno
 
+async def buscar_movimientos(id : int, pieza : str, original : str): 
+    esto = await buscar_partida(int(id))
+    movimientos = esto.movimientos
+    real = [original]
+    for este in movimientos.reverse(): 
+        if pieza in este and real[-1] in este: 
+            piezas = este.split(')')
+            piezas = piezas[1].split('/')
+            if piezas[1] == real[-1]: 
+                real.append(piezas[0])
+    if len(real) <= 2 and (pieza == '♙' or pieza == '♟'): return True
+    elif len(real) == 1 and (pieza == '♜' or pieza == '♖'): return True
+    elif len(real) == 1 and (pieza == '♔' or pieza == '♚'): return True
+    else: return False
+
 async def mandar_mensaje(id : int, mensaje : str): 
     esto = await buscar_partida(int(id))
     esto.mensajes.append(mensaje)

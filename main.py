@@ -129,6 +129,17 @@ async def websocket_endpoint(websocket: WebSocket, client_id: int):
                                         pieza=real['valor'])
                 # await manager.send_personal_message(json.dumps(real), websocket)
                 await manager.broadcast(json.dumps(real))
+            if real['tipo'] == 'enroque': 
+                lista = []
+                for esto in real['datos']: 
+                    verdad = await partidas.servicio.buscar_movimientos(
+                        id=real['id'], 
+                        pieza=esto['pieza'], 
+                        original=esto['original']
+                    )
+                    lista.append(verdad)
+                if lista[0] and lista[1]: 
+                    await manager.send_personal_message(json.dumps(real), websocket)
 
     except WebSocketDisconnect:
         manager.disconnect(websocket)

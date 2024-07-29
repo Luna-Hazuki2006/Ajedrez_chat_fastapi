@@ -43,6 +43,12 @@ async def crear_partida(request : Request):
         'request': request, 'creada': creada
     })
 
+# @router.get('/revisar/{real}')
+# async def revisar(real : str): 
+#     datos = real.split(',')
+#     info = await servicio.buscar_movimientos(int(datos[0]), datos[1], datos[2])
+#     return info
+
 @router.put('/{id}')
 async def modificar_partida(id : int, partida : Partida): 
     return []

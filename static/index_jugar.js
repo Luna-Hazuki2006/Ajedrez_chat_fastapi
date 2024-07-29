@@ -8,8 +8,8 @@ let poder = document.getElementById('poder')
 let tipo = {}
 document.querySelector("#ws-id").textContent = client_id;
 let cambio = new Audio("https://ajedrez-chat-fastapi.onrender.com/static/audio/mover.ogg")
-var ws = new WebSocket(`wss://ajedrez-chat-fastapi.onrender.com/ws/${client_id}`);
-// var ws = new WebSocket(`ws://localhost:8000/ws/${client_id}`);
+// var ws = new WebSocket(`wss://ajedrez-chat-fastapi.onrender.com/ws/${client_id}`);
+var ws = new WebSocket(`ws://localhost:8000/ws/${client_id}`);
 console.log(ws);
 ws.onmessage = function(event) {
     data = JSON.parse(event.data)
@@ -59,6 +59,8 @@ ws.onmessage = function(event) {
         }
         console.log(nueva);
         confirmar()
+    } else if (data['tipo'] == 'enroque') {
+        marcar_enroque(data['datos'])
     }
 };
 function sendMessage(event) {
@@ -167,6 +169,7 @@ function eliminar() {
     for (const esto of todos) {
         if (esto.classList.contains('oportunidad') || esto.getAttribute('onclick') == 'movimiento(this);') {
             esto.classList.remove('oportunidad')
+            esto.classList.remove('enroque')
             esto.removeAttribute('onclick')
             esto.removeAttribute('ondblclick')
         }
@@ -455,6 +458,96 @@ function movimiento_rey(ubicacion, prueba = false) {
     if (este) dar_clickeo(este, ubicacion, prueba)
 }
 
+function movimiento_enroque(ubicacion) {
+    let original = document.getElementById(ubicacion[0] + '-' + ubicacion[1])
+    switch (original.innerText) {
+        case '♜':
+            if (original.id == '8-8') busqueda_vacía(original, 'corto')
+            else if (original.id != '8-1') busqueda_vacía(original, 'largo')
+            else return
+            break;
+        case '♖':
+            if (original.id == '1-8') busqueda_vacía(original, 'corto')
+            else if (original.id == '1-1') busqueda_vacía(original, 'largo') 
+            else return
+            break;
+        case '♚': 
+            if (original.id == '8-5') busqueda_vacía(original, 'ambos')
+            else return
+            break; 
+        case '♔':
+            if (original.id == '1-5') busqueda_vacía(original, 'ambos')
+            else return
+            break;
+        default: return; 
+    }
+}
+
+function busqueda_vacía(data, tipo) {
+    let x = data.id.split('-')
+    let lista = []
+    if (x.classList.contains('blancas')) lista = ['♔', '♖']
+    else if (x.classList.contains('negras')) lista = ['♚', '♜']
+    if (tipo == 'largo' || tipo == 'ambos') {
+        if (unico(x[0] + '-1')?.innerText == lista[1] &&
+            unico(x[0] + '-2')?.innerText == '+' && 
+            unico(x[0] + '-3')?.innerText == '+' && 
+            unico(x[0] + '-4')?.innerText == '+' && 
+            unico(x[0] + '-5')?.innerText == lista[0]) {
+            let mensaje = {
+                'tipo': 'enroque', 
+                'datos': [
+                    {
+                        'pieza': lista[1], 
+                        'original': x[0] + '-1'
+                    }, 
+                    {
+                        'pieza': lista[0], 
+                        'original': x[0] + '-5'
+                    }
+                ], 
+                'id': real.value
+            } 
+            ws.send(JSON.stringify(mensaje))
+        }    
+    }
+    if (tipo == 'corto' || tipo == 'ambos') {
+        if (unico(x[0] + '-5')?.innerText == lista[0] && 
+            unico(x[0] + '-6')?.innerText == '+' && 
+            unico(x[0] + '-7')?.innerText == '+' && 
+            unico(x[0] + '-8')?.innerText == lista[1]) {
+            let mensaje = {
+                'tipo': 'enroque', 
+                'datos': [
+                    {
+                        'pieza': lista[0], 
+                        'original': x[0] + '-5'
+                    }, 
+                    {
+                        'pieza': lista[1], 
+                        'original': x[0] + '-8'
+                    }
+                ], 
+                'id': real.value
+            } 
+            ws.send(JSON.stringify(mensaje))
+        }
+    }
+}
+
+function marcar_enroque(datos) {
+    for (const esto of datos) {
+        let real = document.getElementById(esto['original'])
+        real.classList.add('enroque')
+        nuevo.setAttribute('onclick', 'movimiento(this, true);')
+        nuevo.removeAttribute('ondblclick')
+    }
+}
+
+function unico(id) {
+    return document.getElementById(id)
+}
+
 function mover(data) {
     eliminar()
     let pieza = data.innerText
@@ -481,9 +574,11 @@ function mover(data) {
             break;
         case '♜': 
             movimiento_torre(ubicacion)
+            movimiento_enroque(ubicacion)
             break;
         case '♖': 
             movimiento_torre(ubicacion)
+            movimiento_enroque(ubicacion)
             break;
         case '♝': 
             movimiento_alfil(ubicacion)
@@ -507,9 +602,11 @@ function mover(data) {
             break
         case '♚': 
             movimiento_rey(ubicacion)
+            movimiento_enroque(ubicacion)
             break
         case '♔':
             movimiento_rey(ubicacion) 
+            movimiento_enroque(ubicacion)
             break
         default:
             break;
@@ -517,7 +614,13 @@ function mover(data) {
     // ws.send(JSON.stringify(tipo))
 }
 
-function movimiento(data) {
+function movimiento(data, especial = false) {
+    if (especial) {
+        if (data.classList.contains('enroque')) {
+            
+        }
+        return
+    }
     let original = document.getElementById(tipo['original'])
     original.classList.remove('negras', 'blancas')
     tipo['nuevo'] = data.id
