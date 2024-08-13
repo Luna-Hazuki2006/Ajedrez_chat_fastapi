@@ -8,8 +8,8 @@ let poder = document.getElementById('poder')
 let tipo = {}
 document.querySelector("#ws-id").textContent = client_id;
 let cambio = new Audio("https://ajedrez-chat-fastapi.onrender.com/static/audio/mover.ogg")
-// var ws = new WebSocket(`wss://ajedrez-chat-fastapi.onrender.com/ws/${client_id}`);
-var ws = new WebSocket(`ws://localhost:8000/ws/${client_id}`);
+var ws = new WebSocket(`wss://ajedrez-chat-fastapi.onrender.com/ws/${client_id}`);
+// var ws = new WebSocket(`ws://localhost:8000/ws/${client_id}`);
 console.log(ws);
 ws.onmessage = function(event) {
     data = JSON.parse(event.data)
@@ -617,7 +617,7 @@ function mover(data) {
 function movimiento(data, especial = false) {
     if (especial) {
         if (data.classList.contains('enroque')) {
-            
+            let lista = document.getElementsByClassName('enroque')
         }
         return
     }
