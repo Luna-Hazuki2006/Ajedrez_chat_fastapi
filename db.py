@@ -10,4 +10,4 @@ Posibilidades = db.Posibilidades
 Partidas = db.Partidas
 Usuarios = db.Usuarios
 
-# https://manhwaweb.com/leer/los_diarios_de_la_boticaria_1703655104309-66
+# https://manhwaweb.com/leer/los_diarios_de_la_boticaria_1703655104309-74.2
