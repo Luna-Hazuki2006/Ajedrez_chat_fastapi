@@ -150,3 +150,7 @@ details {
     display: grid;
     grid-template-columns: 1fr 2fr;
 }
+
+.jaque {
+    background-color: darkorchid;
+}

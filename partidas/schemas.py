@@ -11,5 +11,6 @@ class Partida(BaseModel):
     comidas: list[str] = []
     movimientos: list[str] = []
     tablero: list[list]
+    turno: str 
     estado: str
     completo: bool

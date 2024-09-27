@@ -127,10 +127,11 @@ async def websocket_endpoint(websocket: WebSocket, client_id: int):
                     nombre = str(client_id)
                 else: 
                     nombre = real['nombre_real']
-                await partidas.servicio.mover_pieza(id=real['id'], 
-                                                       original=real['original'], 
-                                                       nueva=real['nuevo'], 
-                                                       pieza=real['valor'], 
+                await partidas.servicio.mover_pieza(
+                                        id=real['id'], 
+                                        original=real['original'], 
+                                        nueva=real['nuevo'], 
+                                        pieza=real['valor'], 
                                                        nombre=nombre)
                 # await manager.send_personal_message(json.dumps(real), websocket)
                 await manager.broadcast(json.dumps(real))

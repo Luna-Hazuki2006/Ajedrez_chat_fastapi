@@ -24,6 +24,7 @@ async def buscar_partida(id : int):
                    mensajes=esto['mensajes'], 
                    comidas=esto['comidas'], 
                    tablero=esto['tablero'], 
+                   turno=esto['turno'], 
                    estado=esto['estado'], 
                    completo=esto['completo'])
 
@@ -45,8 +46,10 @@ async def mover_pieza(id : int, pieza : str, original : str, nueva : str, nombre
     esto.tablero[nueva_nueva[0]][nueva_nueva[1]] = pieza
     tamaño = len(esto.movimientos)
     esto.movimientos.insert(tamaño + 1, f'[{nombre}]({pieza}){original}/{nueva}')
+    if esto.turno == 'blancas': esto.turno = 'negras'
+    elif esto.turno == 'negras': esto.turno = 'blancas'
     Partidas.replace_one({'id': int(id)}, dict(esto))
-    return {'id': id, 'pieza': pieza, 'original': original, 'nueva': nueva, 'tablero': esto.tablero, 'ganado': esto.completo}
+    return esto.turno
 
 async def mandar_mensaje(id : int, mensaje : str): 
     esto = await buscar_partida(int(id))
