@@ -30,7 +30,7 @@ async def buscar_partida(id : int):
 async def Borrar_Partida(id : int): 
     Partidas.delete_one({'id': id})
 
-async def mover_pieza(id : int, pieza : str, original : str, nueva : str): 
+async def mover_pieza(id : int, pieza : str, original : str, nueva : str, nombre : str): 
     esto = await buscar_partida(int(id))
     nueva_original = original.split('-')
     nueva_original = [int(nueva_original[0]) - 1, int(nueva_original[1]) - 1]
@@ -44,7 +44,7 @@ async def mover_pieza(id : int, pieza : str, original : str, nueva : str):
             esto.completo = True
     esto.tablero[nueva_nueva[0]][nueva_nueva[1]] = pieza
     tamaño = len(esto.movimientos)
-    esto.movimientos.insert(tamaño + 1, f'({pieza}){original}/{nueva}')
+    esto.movimientos.insert(tamaño + 1, f'[{nombre}]({pieza}){original}/{nueva}')
     Partidas.replace_one({'id': int(id)}, dict(esto))
     return {'id': id, 'pieza': pieza, 'original': original, 'nueva': nueva, 'tablero': esto.tablero, 'ganado': esto.completo}
 
