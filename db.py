@@ -1,6 +1,7 @@
 import pymongo
+import os
 
-cliente = pymongo.MongoClient('mongodb+srv://lunahazuki2006:cXU0lYhSncWZ12FM@cluster0.owjghpf.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0')
+cliente = pymongo.MongoClient(os.environ.get('URL'))
 
 db = cliente.Ajedrez
 

@@ -6,11 +6,12 @@ from fastapi import Security
 from passlib.context import CryptContext
 from usuarios.schemas import Usuario
 from datetime import datetime, timezone, timedelta
+import os
 
 class AuthHandler():
     security = HTTPBearer()
     pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
-    SECRET_KEY = "27A0D7C4CCCE76E6BE39225B7EEE8BD0EF890DE82D49E459F4C405C583080AB0"
+    SECRET_KEY = os.environ.get('LLAVE')
     ALGORITHM = "HS256"
     ACCESS_TOKEN_EXPIRE_MINUTES = 15
 
